@@ -18,12 +18,19 @@ paths:
         - name: name
           in: query
           description: Filters by name (ignores capitalisation, matches if provided name is part of full name)
+          schema:
+            type: string
         - name: email
           in: query
           description: Filters by email
+          schema:
+            type: string
+            format: email
         - name: phone
           in: query
           description: Filters by phone number (whitespace is trimmed, can omit country code)
+          schema:
+            $ref: '#/components/schemas/PhoneNumber'
       responses:
         200:
           description: Successfully retrieved bookings from the server
@@ -89,6 +96,7 @@ paths:
                     properties:
                       op:
                         type: string
+                        description: Custom JSON Patch operations for this endpoint
                         enum: [create-invoice, cancel-invoice, create-online-payment]
       responses:
         200:
@@ -124,54 +132,54 @@ paths:
         404:
           $ref: '#/components/responses/404NotFound'
 
-  /products:
-    get:
-      description: Returns a list of products
-      responses:
-        200:
-          description: Successfully retrieved the products from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Product'
-    post:
-      description: Inserts single product and all its nested relations
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Product'
-      responses:
-        201:
-          description: Successfully created a new product on the server
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
-
-  /products/{product}:
-    get:
-      description: Returns a single product based on its ID
-      parameters:
-        - $ref: '#/components/parameters/ProductId'
-      responses:
-        200:
-          description: Successfully retrieved the product from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/Product'
-        404:
-          $ref: '#/components/responses/404NotFound'
+#  /products:
+#    get:
+#      description: Returns a list of products
+#      responses:
+#        200:
+#          description: Successfully retrieved the products from the server
+#          content:
+#            application/json:
+#              schema:
+#                type: object
+#                properties:
+#                  data:
+#                    type: array
+#                    items:
+#                      $ref: '#/components/schemas/Product'
+#    post:
+#      description: Inserts single product and all its nested relations
+#      requestBody:
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Product'
+#      responses:
+#        201:
+#          description: Successfully created a new product on the server
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Product'
+#
+#  /products/{product}:
+#    get:
+#      description: Returns a single product based on its ID
+#      parameters:
+#        - $ref: '#/components/parameters/ProductId'
+#      responses:
+#        200:
+#          description: Successfully retrieved the product from the server
+#          content:
+#            application/json:
+#              schema:
+#                type: object
+#                properties:
+#                  data:
+#                    $ref: '#/components/schemas/Product'
+#        404:
+#          $ref: '#/components/responses/404NotFound'
 
   /users: {}
   /instances: {}
@@ -228,64 +236,67 @@ components:
 #    403Forbidden:
 #    500ServerError:
   schemas:
-    Product:
-      type: object
+#    Product:
+#      type: object
 #      required:
 #        - name
 #        - description
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        name:
-          type: string
-        description:
-          type: string
-        web:
-          $ref: '#/components/schemas/WidgetInfo'
-        cutoff:
-          type: integer
-        accessStatus:
-          $ref: '#/components/schemas/ProductAccessStatus'
-        ticketOptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TicketOption'
-        termsAndConditions: {}
-        staffRequirements:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaffRequirement'
-        location:
-          $ref: '#/components/schemas/Location'
-    WidgetInfo:
-      type: object
-      properties: {}
-    TicketOption:
-      type: object
-      properties: {}
-    StaffRequirement:
-      type: object
-      properties: {}
-    Location:
-      type: object
-      properties: {}
-    ProductAccessStatus:
-      type: string
-      enum: [ public, private, api-only ]
+#      properties:
+#        id:
+#          type: integer
+#          readOnly: true
+#        name:
+#          type: string
+#        description:
+#          type: string
+#        web:
+#          $ref: '#/components/schemas/WidgetInfo'
+#        cutoff:
+#          type: integer
+#        accessStatus:
+#          $ref: '#/components/schemas/ProductAccessStatus'
+#        ticketOptions:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/TicketOption'
+#        termsAndConditions: {}
+#        staffRequirements:
+#          type: array
+#          items:
+#            $ref: '#/components/schemas/StaffRequirement'
+#        location:
+#          $ref: '#/components/schemas/Location'
+#    WidgetInfo:
+#      type: object
+#      properties: {}
+#    TicketOption:
+#      type: object
+#      properties: {}
+#    StaffRequirement:
+#      type: object
+#      properties: {}
+#    Location:
+#      type: object
+#      properties: {}
+#    ProductAccessStatus:
+#      type: string
+#      enum: [public, private, api-only]
 
     Booking:
       allOf:
         - type: object
+          required: [id]
           properties:
             id:
               $ref: '#/components/schemas/ULID'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
+          required: [expiresAt, tickets, invoice, cancelledInvoices, deposits, payments, onlinePayments]
           properties:
             expiresAt:
               type: string
               format: date-time
+              nullable: true
               readOnly: true
             tickets:
               type: array
@@ -295,11 +306,19 @@ components:
               allOf:
                 - $ref: '#/components/schemas/Invoice'
                 - readOnly: true
+                  nullable: true
             cancelledInvoices:
               type: array
               readOnly: true
               items:
-                $ref: '#/components/schemas/CancellableInvoice'
+                allOf:
+                  - $ref: '#/components/schemas/Invoice'
+                  - type: object
+                    required: [cancelledAt]
+                    properties:
+                      cancelledAt:
+                        type: string
+                        format: date-time
             deposits:
               type: array
               items:
@@ -310,11 +329,12 @@ components:
                 $ref: '#/components/schemas/Payment'
             onlinePayments:
               type: array
-              readOnly: true # TODO: is this right?
+              readOnly: true
               items:
                 $ref: '#/components/schemas/OnlinePayment'
     QuantifiedBookable:
       type: object
+      required: [id, bookableId, quantity]
       properties:
         id:
           $ref: '#/components/schemas/ULID'
@@ -327,9 +347,12 @@ components:
             # more info about product, ticket option etc. (separate schema!)
     Payment:
       type: object
+      required: [id, currency, amountMinor, createdAt, type]
       properties:
         id:
           $ref: '#/components/schemas/ULID'
+        currency:
+          $ref: '#/components/schemas/Currency'
         amountMinor:
           type: integer
         createdAt:
@@ -341,14 +364,17 @@ components:
           enum: [online, checkout, ...]
     OnlinePayment:
       type: object
+      required: [id, provider, currency, amountMinor, createdAt, status, statusAt, bilberryPaymentId]
       readOnly: true
       properties:
-        ref:
+        id:
           type: string
           format: uuid
         provider:
           type: string
           enum: [nets, stripe]
+        currency:
+          $ref: '#/components/schemas/Currency'
         amountMinor:
           type: integer
         createdAt:
@@ -361,10 +387,13 @@ components:
           type: string
           format: date-time
         bilberryPaymentId:
-          $ref: '#/components/schemas/ULID'
+          allOf:
+            - $ref: '#/components/schemas/ULID'
+            - nullable: true
     Invoice:
-      nullable: true
       type: object
+      required: [id, createdAt]
+      nullable: true
       properties:
         id:
           type: integer
@@ -373,42 +402,46 @@ components:
           type: string
           format: date-time
           readOnly: true
-    CancellableInvoice:
+    DepositInvoice:
       allOf:
         - $ref: '#/components/schemas/Invoice'
         - type: object
-          properties:
-            cancelledAt:
-              type: string
-              format: date-time
-              readOnly: true
-              nullable: true # TODO: this is incorrect when used in Booking ("cancelledInvoices": [])
-    DepositInvoice:
-      allOf:
-        - $ref: '#/components/schemas/CancellableInvoice'
-        - type: object
+          required: [amountMinor, currency, cancelledAt]
           properties:
             amountMinor:
               type: integer
             currency:
               $ref: '#/components/schemas/Currency'
+            cancelledAt:
+              type: string
+              format: date-time
+              readOnly: true
+              nullable: true
     BookingMetaInfo:
       type: object
+      required: [firstName, lastName, email, phone]
       properties:
         firstName:
           type: string
+          nullable: true
         lastName:
           type: string
+          nullable: true
         email:
           type: string
           format: email
+          nullable: true
         phone:
-          $ref: '#/components/schemas/PhoneNumber'
+          allOf:
+            - $ref: '#/components/schemas/PhoneNumber'
+            - nullable: true
     DetailedInvoice:
+      readOnly: true
       allOf:
-        - $ref: '#/components/schemas/CancellableInvoice'
+        - $ref: '#/components/schemas/Invoice'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
+          required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items]
           properties:
             currency:
               $ref: '#/components/schemas/Currency'
@@ -434,29 +467,32 @@ components:
                     type: integer
                   quantity:
                     type: integer
-
+            cancelledAt:
+              type: string
+              format: date-time
+              nullable: true
     JSONPatch:
       oneOf:
         - type: object
           required: [op, path, value]
           properties:
             op:
-              type: string
-              description: The operation to be carried out
-              enum: [add, replace, test]
+              allOf:
+                - $ref: '#/components/schemas/JSONPatchOp'
+                - enum: [add, replace, test]
             path:
-              $ref: '#/components/schemas/JSONPath'
+              $ref: '#/components/schemas/JSONPatchPath'
             value:
-              description: The value used for the operation (any type)
+              $ref: '#/components/schemas/JSONPatchValue'
         - type: object
           required: [op, path]
           properties:
             op:
-              type: string
-              description: The operation to be carried out
-              enum: [remove]
+              allOf:
+                - $ref: '#/components/schemas/JSONPatchOp'
+                - enum: [remove]
             path:
-              $ref: '#/components/schemas/JSONPath'
+              $ref: '#/components/schemas/JSONPatchPath'
 #        - type: object
 #          required: [op, from, path]
 #          properties:
@@ -467,47 +503,28 @@ components:
 #              $ref: '#/components/schemas/JSONPatchPath'
 #            path:
 #              $ref: '#/components/schemas/JSONPatchPath'
-    JSONPatchWithPathAndValue:
-      type: object
-      required: [ op, path, value ]
-      properties:
-        op:
-          type: string
-          description: The operation to be carried out
-        path:
-          $ref: '#/components/schemas/JSONPath'
-        value:
-          description: The value used for the operation (any type)
-    JSONPatchWithPathOnly:
-      type: object
-      required: [ op, path, value ]
-      properties:
-        op:
-          type: string
-          description: The operation to be carried out
-        path:
-          $ref: '#/components/schemas/JSONPath'
-    JSONPatchWithOpOnly:
-      type: object
-      required: [ op, path, value ]
-      properties:
-        op:
-          type: string
-          description: The operation to be carried out
-    JSONPath:
+    JSONPatchOp:
+      type: string
+      description: The operation to be carried out
+    JSONPatchPath:
       type: string
       description: A path in the request object of the related POST request following modified JSON patch syntax
       example: /my/path/12/asd
+    JSONPatchValue:
+      description: The value used for the operation (any type)
 
     PaginationLinks:
       type: object
+      required: [next, prev]
       properties:
         next:
           type: string
           format: url
+          nullable: true
         prev:
           type: string
           format: url
+          nullable: true
 
     PhoneNumber:
       type: string
