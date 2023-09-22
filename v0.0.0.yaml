@@ -332,6 +332,24 @@ components:
               readOnly: true
               items:
                 $ref: '#/components/schemas/OnlinePayment'
+    BookingMetaInfo:
+      type: object
+      required: [firstName, lastName, email, phone]
+      properties:
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          allOf:
+            - $ref: '#/components/schemas/PhoneNumber'
+            - nullable: true
     QuantifiedBookable:
       type: object
       required: [id, bookableId, quantity]
@@ -344,7 +362,7 @@ components:
           type: integer
           minimum: 1
           default: 1
-            # more info about product, ticket option etc. (separate schema!)
+            # TODO: more info about product, ticket option etc. (separate schema!)
     Payment:
       type: object
       required: [id, currency, amountMinor, createdAt, type]
@@ -417,31 +435,13 @@ components:
               format: date-time
               readOnly: true
               nullable: true
-    BookingMetaInfo:
-      type: object
-      required: [firstName, lastName, email, phone]
-      properties:
-        firstName:
-          type: string
-          nullable: true
-        lastName:
-          type: string
-          nullable: true
-        email:
-          type: string
-          format: email
-          nullable: true
-        phone:
-          allOf:
-            - $ref: '#/components/schemas/PhoneNumber'
-            - nullable: true
     DetailedInvoice:
       readOnly: true
       allOf:
         - $ref: '#/components/schemas/Invoice'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
-          required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items]
+          required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, cancelledAt]
           properties:
             currency:
               $ref: '#/components/schemas/Currency'
