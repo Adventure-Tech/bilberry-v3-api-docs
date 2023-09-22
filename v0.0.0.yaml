@@ -1,0 +1,527 @@
+openapi: 3.0.3
+info:
+  title: Bilberry v3 API
+  description: The public and internal API of Bilberry v3
+  version: 0.0.0
+servers:
+  - url: 'https://bilberry.test/api/v0'
+#security:
+#  - BasicAuth: []
+paths:
+
+  /bookings:
+    get:
+      description: Returns list of bookings
+      tags:
+        - Booking API
+      parameters:
+        - name: name
+          in: query
+          description: Filters by name (ignores capitalisation, matches if provided name is part of full name)
+        - name: email
+          in: query
+          description: Filters by email
+        - name: phone
+          in: query
+          description: Filters by phone number (whitespace is trimmed, can omit country code)
+      responses:
+        200:
+          description: Successfully retrieved bookings from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Booking'
+                  links:
+                    $ref: '#/components/schemas/PaginationLinks'
+    post:
+      description: Creates new booking
+      tags:
+        - Booking API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+      responses:
+        201:
+          description: Successfully created new booking on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+
+  /bookings/{booking}:
+    get:
+      description: Returns a single booking based on its ID
+      tags:
+        - Booking API
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      responses:
+        200:
+          description: Successfully retrieved the booking from the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        404:
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific booking based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - Booking API
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                oneOf:
+                  - $ref: '#/components/schemas/JSONPatch'
+                  - type: object
+                    properties:
+                      op:
+                        type: string
+                        enum: [create-invoice, cancel-invoice, create-online-payment]
+      responses:
+        200:
+          description: Successfully updated the booking on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+    delete:
+      description: Cancel a specific booking based on its ID
+      tags:
+        - Booking API
+      parameters:
+        - $ref: '#/components/parameters/BookingId'
+      responses:
+        200:
+          description: Successfully cancelled the booking on the server
+
+  /invoices/{invoice}:
+    get:
+      description: Returns a single invoice based on its reference
+      parameters:
+        - $ref: '#/components/parameters/InvoiceRef'
+      tags:
+        - Reporting API
+      responses:
+        200:
+          description: Successfully retrieved the invoice from the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedInvoice'
+        404:
+          $ref: '#/components/responses/404NotFound'
+
+  /products:
+    get:
+      description: Returns a list of products
+      responses:
+        200:
+          description: Successfully retrieved the products from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+    post:
+      description: Inserts single product and all its nested relations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        201:
+          description: Successfully created a new product on the server
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+  /products/{product}:
+    get:
+      description: Returns a single product based on its ID
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        200:
+          description: Successfully retrieved the product from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
+        404:
+          $ref: '#/components/responses/404NotFound'
+
+  /users: {}
+  /instances: {}
+  /resources: {}
+  /vat-models: {}
+  /reports: {}
+  /notifications: {}
+  /staff: {}
+components:
+  parameters:
+    ProductId:
+      name: product
+      in: path
+      required: true
+      description: The product ID
+      schema:
+        type: integer
+        minimum: 0
+    BookingId:
+      name: booking
+      in: path
+      required: true
+      description: The booking ID
+      schema:
+        type: string
+        format: uuid
+    InvoiceRef:
+      name: invoice
+      in: path
+      required: true
+      description: The invoice ref
+      schema:
+        type: integer
+        minimum: 0
+      example: "100427"
+  responses:
+    404NotFound:
+      description: Not found error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              description:
+                type: string
+              details:
+                type: object
+                properties: {}
+              code:
+                type: integer # or string if allowing for codes like: PROD-1000
+#    401Unauthorized:
+#    403Forbidden:
+#    500ServerError:
+  schemas:
+    Product:
+      type: object
+#      required:
+#        - name
+#        - description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        web:
+          $ref: '#/components/schemas/WidgetInfo'
+        cutoff:
+          type: integer
+        accessStatus:
+          $ref: '#/components/schemas/ProductAccessStatus'
+        ticketOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketOption'
+        termsAndConditions: {}
+        staffRequirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffRequirement'
+        location:
+          $ref: '#/components/schemas/Location'
+    WidgetInfo:
+      type: object
+      properties: {}
+    TicketOption:
+      type: object
+      properties: {}
+    StaffRequirement:
+      type: object
+      properties: {}
+    Location:
+      type: object
+      properties: {}
+    ProductAccessStatus:
+      type: string
+      enum: [ public, private, api-only ]
+
+    Booking:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ULID'
+        - $ref: '#/components/schemas/BookingMetaInfo'
+        - type: object
+          properties:
+            expiresAt:
+              type: string
+              format: date-time
+              readOnly: true
+            tickets:
+              type: array
+              items:
+                $ref: '#/components/schemas/QuantifiedBookable'
+            invoice:
+              allOf:
+                - $ref: '#/components/schemas/Invoice'
+                - readOnly: true
+            cancelledInvoices:
+              type: array
+              readOnly: true
+              items:
+                $ref: '#/components/schemas/CancellableInvoice'
+            deposits:
+              type: array
+              items:
+                $ref: '#/components/schemas/DepositInvoice'
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payment'
+            onlinePayments:
+              type: array
+              readOnly: true # TODO: is this right?
+              items:
+                $ref: '#/components/schemas/OnlinePayment'
+    QuantifiedBookable:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        bookableId:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
+            # more info about product, ticket option etc. (separate schema!)
+    Payment:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        amountMinor:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        type:
+          type: string
+          enum: [online, checkout, ...]
+    OnlinePayment:
+      type: object
+      readOnly: true
+      properties:
+        ref:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum: [nets, stripe]
+        amountMinor:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [created, timed-out, completed, cancelled]
+        statusAt:
+          type: string
+          format: date-time
+        bilberryPaymentId:
+          $ref: '#/components/schemas/ULID'
+    Invoice:
+      nullable: true
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+    CancellableInvoice:
+      allOf:
+        - $ref: '#/components/schemas/Invoice'
+        - type: object
+          properties:
+            cancelledAt:
+              type: string
+              format: date-time
+              readOnly: true
+              nullable: true # TODO: this is incorrect when used in Booking ("cancelledInvoices": [])
+    DepositInvoice:
+      allOf:
+        - $ref: '#/components/schemas/CancellableInvoice'
+        - type: object
+          properties:
+            amountMinor:
+              type: integer
+            currency:
+              $ref: '#/components/schemas/Currency'
+    BookingMetaInfo:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          $ref: '#/components/schemas/PhoneNumber'
+    DetailedInvoice:
+      allOf:
+        - $ref: '#/components/schemas/CancellableInvoice'
+        - $ref: '#/components/schemas/BookingMetaInfo'
+        - type: object
+          properties:
+            currency:
+              $ref: '#/components/schemas/Currency'
+            # TODO: amount minor | string vs integer vs float
+            totalAmountGross:
+              type: integer
+            totalAmountNet:
+              type: integer
+            totalAmountVAT:
+              type: integer
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  amountNet:
+                    type: integer
+                  amountGross:
+                    type: integer
+                  amountVAT:
+                    type: integer
+                  quantity:
+                    type: integer
+
+    JSONPatch:
+      oneOf:
+        - type: object
+          required: [op, path, value]
+          properties:
+            op:
+              type: string
+              description: The operation to be carried out
+              enum: [add, replace, test]
+            path:
+              $ref: '#/components/schemas/JSONPath'
+            value:
+              description: The value used for the operation (any type)
+        - type: object
+          required: [op, path]
+          properties:
+            op:
+              type: string
+              description: The operation to be carried out
+              enum: [remove]
+            path:
+              $ref: '#/components/schemas/JSONPath'
+#        - type: object
+#          required: [op, from, path]
+#          properties:
+#            op:
+#              type: string
+#              enum: [move, copy]
+#            from:
+#              $ref: '#/components/schemas/JSONPatchPath'
+#            path:
+#              $ref: '#/components/schemas/JSONPatchPath'
+    JSONPatchWithPathAndValue:
+      type: object
+      required: [ op, path, value ]
+      properties:
+        op:
+          type: string
+          description: The operation to be carried out
+        path:
+          $ref: '#/components/schemas/JSONPath'
+        value:
+          description: The value used for the operation (any type)
+    JSONPatchWithPathOnly:
+      type: object
+      required: [ op, path, value ]
+      properties:
+        op:
+          type: string
+          description: The operation to be carried out
+        path:
+          $ref: '#/components/schemas/JSONPath'
+    JSONPatchWithOpOnly:
+      type: object
+      required: [ op, path, value ]
+      properties:
+        op:
+          type: string
+          description: The operation to be carried out
+    JSONPath:
+      type: string
+      description: A path in the request object of the related POST request following modified JSON patch syntax
+      example: /my/path/12/asd
+
+    PaginationLinks:
+      type: object
+      properties:
+        next:
+          type: string
+          format: url
+        prev:
+          type: string
+          format: url
+
+    PhoneNumber:
+      type: string
+      format: phone
+      example: '+4712345678'
+    Currency:
+      type: string
+      format: currency
+      minLength: 3
+      maxLength: 3
+      example: NOK
+    ULID:
+      type: string
+      format: ulid
+      example: 01F8MECHZX3TBDSZ7XR8H8JHAF
+      pattern: ^[0-7][0-9A-HJKMNP-TV-Z]{25}$
+      readOnly: true
