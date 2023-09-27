@@ -291,7 +291,7 @@ components:
               $ref: '#/components/schemas/ULID'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
-          required: [expiresAt, tickets, invoice, cancelledInvoices, deposits, payments, onlinePayments]
+          required: [expiresAt, tickets, invoice, creditedInvoices, deposits, payments, onlinePayments]
           properties:
             expiresAt:
               type: string
@@ -307,16 +307,16 @@ components:
                 - $ref: '#/components/schemas/Invoice'
                 - readOnly: true
                   nullable: true
-            cancelledInvoices:
+            creditedInvoices:
               type: array
               readOnly: true
               items:
                 allOf:
                   - $ref: '#/components/schemas/Invoice'
                   - type: object
-                    required: [cancelledAt]
+                    required: [creditedAt]
                     properties:
-                      cancelledAt:
+                      creditedAt:
                         type: string
                         format: date-time
             deposits:
@@ -424,13 +424,13 @@ components:
       allOf:
         - $ref: '#/components/schemas/Invoice'
         - type: object
-          required: [amountMinor, currency, cancelledAt]
+          required: [amountMinor, currency, creditedAt]
           properties:
             amountMinor:
               type: integer
             currency:
               $ref: '#/components/schemas/Currency'
-            cancelledAt:
+            creditedAt:
               type: string
               format: date-time
               readOnly: true
@@ -441,7 +441,7 @@ components:
         - $ref: '#/components/schemas/Invoice'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
-          required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, cancelledAt]
+          required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, creditedAt]
           properties:
             currency:
               $ref: '#/components/schemas/Currency'
@@ -467,7 +467,7 @@ components:
                     type: integer
                   quantity:
                     type: integer
-            cancelledAt:
+            creditedAt:
               type: string
               format: date-time
               nullable: true
