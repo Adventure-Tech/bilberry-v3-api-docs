@@ -291,7 +291,7 @@ components:
               $ref: '#/components/schemas/ULID'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
-          required: [expiresAt, tickets, invoice, creditedInvoices, deposits, payments, onlinePayments]
+          required: [expiresAt, tickets, invoice, creditedInvoices, depositInvoices, payments, onlinePayments]
           properties:
             expiresAt:
               type: string
@@ -319,7 +319,7 @@ components:
                       creditedAt:
                         type: string
                         format: date-time
-            deposits:
+            depositInvoices:
               type: array
               items:
                 $ref: '#/components/schemas/DepositInvoice'
