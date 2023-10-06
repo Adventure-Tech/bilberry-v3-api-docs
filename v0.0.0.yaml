@@ -531,7 +531,7 @@ components:
 
     PaginationLinks:
       type: object
-      required: [next, prev]
+      required: [current, next, prev]
       properties:
         current:
           type: string
