@@ -13,23 +13,39 @@ Location:
 ProductAccessStatus:
   $ref: './products/AccessStatus.yaml'
 
-#BookingWrapped:
-#Booking:
-#BookingMetaInfo:
-#Payment:
-#OnlinePayment:
-#Invoice:
-#DepositInvoice:
-#
-#ReportingInvoice:
-#
-#JSONPatch:
-#JSONPatchOp:
-#JSONPatchPath:
-#JSONPatchValue:
-#
-#PaginationLinks:
-#
-#PhoneNumber:
-#Currency:
-#ULID:
+BookingWrapped:
+  $ref: './bookings/BookingWrapped.yaml'
+Booking:
+  $ref: './bookings/Booking.yaml'
+BookingMetaInfo:
+  $ref: './bookings/BookingMetaInfo.yaml'
+Payment:
+  $ref: './bookings/Payment.yaml'
+OnlinePayment:
+  $ref: './bookings/OnlinePayment.yaml'
+Invoice:
+  $ref: './bookings/Invoice.yaml'
+DepositInvoice:
+  $ref: './bookings/DepositInvoice.yaml'
+
+ReportingInvoice:
+  $ref: './reporting/Invoice.yaml'
+
+JSONPatch:
+  $ref: './jsonpatch/PatchObject.yaml'
+JSONPatchOp:
+  $ref: './jsonpatch/Op.yaml'
+JSONPatchPath:
+  $ref: './jsonpatch/Path.yaml'
+JSONPatchValue:
+  $ref: './jsonpatch/Value.yaml'
+
+PaginationLinks:
+  $ref: './pagination/Links.yaml'
+
+PhoneNumber:
+  $ref: './types/PhoneNumber.yaml'
+Currency:
+  $ref: './types/Currency.yaml'
+ULID:
+  $ref: './types/ULID.yaml'

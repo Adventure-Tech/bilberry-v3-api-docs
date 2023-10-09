@@ -1,0 +1,15 @@
+name: Bundle Open Api Spec
+on: push
+
+jobs:
+  bundle-open-api-spec:
+    name: Bundle Open Api Spec
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout spec
+        uses: actions/checkout@v3
+      - name: bundle spec
+        uses: hilary/openapi-cli-bundle-action@v0.0.1
+        with:
+          base-spec: openapi.yml
+          bundled-spec: dist/openapi.yaml
