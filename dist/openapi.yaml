@@ -4,8 +4,8 @@ info:
   description: The public and internal API of Bilberry v3
   version: 0.0.0
 servers:
-  - url: 'https://bilberry.test/api/v0'
-  - url: 'https://bilberry-v3-staging-sxren.ondigitalocean.app/api/v0'
+  - url: https://bilberry.test/api/v0
+  - url: https://bilberry-v3-staging-sxren.ondigitalocean.app/api/v0
 paths:
   /bookings:
     get:
@@ -15,7 +15,7 @@ paths:
       parameters:
         - name: name
           in: query
-          description: 'Filters by name (ignores capitalisation, matches if provided name is part of full name)'
+          description: Filters by name (ignores capitalisation, matches if provided name is part of full name)
           schema:
             type: string
         - name: email
@@ -26,7 +26,7 @@ paths:
             format: email
         - name: phone
           in: query
-          description: 'Filters by phone number (whitespace is trimmed, can omit country code)'
+          description: Filters by phone number (whitespace is trimmed, can omit country code)
           schema:
             $ref: '#/components/schemas/PhoneNumber'
         - $ref: '#/components/parameters/PageCursor'
@@ -44,7 +44,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/Booking'
                   links:
-                    $ref: '#/components/schemas/PaginationLinks'
+                    $ref: '#/components/schemas/Links'
     post:
       description: Creates new booking
       tags:
@@ -61,7 +61,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingWrapped'
-  '/bookings/{booking}':
+  /bookings/{booking}:
     get:
       description: Returns a single booking based on its ID
       tags:
@@ -90,7 +90,7 @@ paths:
               type: array
               items:
                 oneOf:
-                  - $ref: '#/components/schemas/JSONPatch'
+                  - $ref: '#/components/schemas/PatchObject'
                   - type: object
                     properties:
                       op:
@@ -116,7 +116,7 @@ paths:
       responses:
         '200':
           description: Successfully cancelled the booking on the server
-  '/invoices/{invoice}':
+  /invoices/{invoice}:
     get:
       description: Returns a single invoice based on its reference
       parameters:
@@ -129,7 +129,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookingWrapped'
+                $ref: '#/components/schemas/DetailedInvoiceWrapped'
         '404':
           $ref: '#/components/responses/404NotFound'
   /products:
@@ -153,7 +153,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/Product'
                   links:
-                    $ref: '#/components/schemas/PaginationLinks'
+                    $ref: '#/components/schemas/Links'
     post:
       description: Creates new product
       tags:
@@ -170,7 +170,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProductWrapped'
-  '/product/{product}':
+  /product/{product}:
     get:
       description: Returns a single product based on its ID
       tags:
@@ -199,7 +199,7 @@ paths:
               type: array
               items:
                 oneOf:
-                  - $ref: '#/components/schemas/JSONPatch'
+                  - $ref: '#/components/schemas/PatchObject'
                   - type: object
                     properties:
                       op:
@@ -233,127 +233,144 @@ paths:
   /notifications: {}
   /staff: {}
 components:
-  parameters:
-    ProductId:
-      name: product
-      in: path
-      required: true
-      description: The product ID
-      schema:
-        type: integer
-        minimum: 0
-    BookingId:
-      name: booking
-      in: path
-      required: true
-      description: The booking ID
-      schema:
-        type: string
-        format: uuid
-    InvoiceRef:
-      name: invoice
-      in: path
-      required: true
-      description: The invoice ref
-      schema:
-        type: integer
-        minimum: 0
-      example: '100427'
-    PageCursor:
-      name: page
-      in: query
-      description: The cursor pointing to a page
-      schema:
-        type: string
-        format: base64
-        example: MXwwMUhDOVpIVkpSVEZZQ1gzMUdZVkQ5WDEzMXxuZXh0
-    PerPage:
-      name: per_page
-      in: query
-      description: Number of records per page
-      schema:
-        type: integer
-        minimum: 1
-  responses:
-    404NotFound:
-      description: Not found error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-              description:
-                type: string
-              details:
-                type: object
-                properties: {}
-              code:
-                type: integer
   schemas:
-    ProductWrapped:
+    PhoneNumber:
+      type: string
+      format: phone
+      example: '+4712345678'
+    ULID:
+      type: string
+      format: ulid
+      example: 01F8MECHZX3TBDSZ7XR8H8JHAF
+      pattern: ^[0-7][0-9A-HJKMNP-TV-Z]{25}$
+      readOnly: true
+    BookingMetaInfo:
       type: object
       required:
-        - data
+        - firstName
+        - lastName
+        - email
+        - phone
       properties:
-        data:
-          $ref: '#/components/schemas/Product'
-    Product:
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          allOf:
+            - $ref: '#/components/schemas/PhoneNumber'
+            - nullable: true
+    Invoice:
       type: object
       required:
-        - name
-        - description
+        - id
+        - createdAt
+      nullable: true
       properties:
         id:
           type: integer
           readOnly: true
-        name:
+        createdAt:
           type: string
-        description:
-          type: string
-        web:
-          $ref: '#/components/schemas/WidgetInfo'
-        cutoff:
-          type: integer
-        accessStatus:
-          $ref: '#/components/schemas/ProductAccessStatus'
-        ticketOptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TicketOption'
-        termsAndConditions: {}
-        staffRequirements:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaffRequirement'
-        location:
-          $ref: '#/components/schemas/Location'
-    WidgetInfo:
-      type: object
-      properties: {}
-    TicketOption:
-      type: object
-      properties: {}
-    StaffRequirement:
-      type: object
-      properties: {}
-    Location:
-      type: object
-      properties: {}
-    ProductAccessStatus:
+          format: date-time
+          readOnly: true
+    Currency:
       type: string
-      enum:
-        - public
-        - private
-        - api-only
-    BookingWrapped:
+      format: currency
+      minLength: 3
+      maxLength: 3
+      example: NOK
+    DepositInvoice:
+      allOf:
+        - $ref: '#/components/schemas/Invoice'
+        - type: object
+          required:
+            - amountMinor
+            - currency
+            - creditedAt
+          properties:
+            amountMinor:
+              type: integer
+            currency:
+              $ref: '#/components/schemas/Currency'
+            creditedAt:
+              type: string
+              format: date-time
+              readOnly: true
+              nullable: true
+    Payment:
       type: object
       required:
-        - data
+        - id
+        - currency
+        - amountMinor
+        - createdAt
+        - type
       properties:
-        data:
-          $ref: '#/components/schemas/Booking'
+        id:
+          $ref: '#/components/schemas/ULID'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        amountMinor:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        type:
+          type: string
+          enum:
+            - online
+            - checkout
+            - ...
+    OnlinePayment:
+      type: object
+      required:
+        - id
+        - provider
+        - currency
+        - amountMinor
+        - createdAt
+        - status
+        - statusAt
+        - bilberryPaymentId
+      readOnly: true
+      properties:
+        id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum:
+            - nets
+            - stripe
+        currency:
+          $ref: '#/components/schemas/Currency'
+        amountMinor:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - created
+            - timed-out
+            - completed
+            - cancelled
+        statusAt:
+          type: string
+          format: date-time
+        bilberryPaymentId:
+          allOf:
+            - $ref: '#/components/schemas/ULID'
+            - nullable: true
     Booking:
       allOf:
         - type: object
@@ -426,164 +443,77 @@ components:
               readOnly: true
               items:
                 $ref: '#/components/schemas/OnlinePayment'
-    BookingMetaInfo:
+    Links:
       type: object
       required:
-        - firstName
-        - lastName
-        - email
-        - phone
+        - current
+        - next
+        - prev
       properties:
-        firstName:
+        current:
           type: string
+          format: url
           nullable: true
-        lastName:
+        next:
           type: string
+          format: url
           nullable: true
-        email:
+        prev:
           type: string
-          format: email
+          format: url
           nullable: true
-        phone:
-          allOf:
-            - $ref: '#/components/schemas/PhoneNumber'
-            - nullable: true
-    Payment:
+    BookingWrapped:
       type: object
       required:
-        - id
-        - currency
-        - amountMinor
-        - createdAt
-        - type
+        - data
       properties:
-        id:
-          $ref: '#/components/schemas/ULID'
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          type: integer
-        createdAt:
-          type: string
-          format: date-time
-          readOnly: true
-        type:
-          type: string
-          enum:
-            - online
-            - checkout
-            - ...
-    OnlinePayment:
-      type: object
-      required:
-        - id
-        - provider
-        - currency
-        - amountMinor
-        - createdAt
-        - status
-        - statusAt
-        - bilberryPaymentId
+        data:
+          $ref: '#/components/schemas/Booking'
+    Op:
+      type: string
+      description: The operation to be carried out
+    Path:
+      type: string
+      description: A path in the request object of the related POST request following modified JSON patch syntax
+      example: /my/path/12/asd
+    Value:
+      description: The value used for the operation (any type)
+    PatchObject:
+      oneOf:
+        - type: object
+          required:
+            - op
+            - path
+            - value
+          properties:
+            op:
+              allOf:
+                - $ref: '#/components/schemas/Op'
+                - enum:
+                    - add
+                    - replace
+                    - test
+            path:
+              $ref: '#/components/schemas/Path'
+            value:
+              $ref: '#/components/schemas/Value'
+        - type: object
+          required:
+            - op
+            - path
+          properties:
+            op:
+              allOf:
+                - $ref: '#/components/schemas/Op'
+                - enum:
+                    - remove
+            path:
+              $ref: '#/components/schemas/Path'
+    DetailedInvoice:
       readOnly: true
-      properties:
-        id:
-          type: string
-          format: uuid
-        provider:
-          type: string
-          enum:
-            - nets
-            - stripe
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          type: integer
-        createdAt:
-          type: string
-          format: date-time
-        status:
-          type: string
-          enum:
-            - created
-            - timed-out
-            - completed
-            - cancelled
-        statusAt:
-          type: string
-          format: date-time
-        bilberryPaymentId:
-          allOf:
-            - $ref: '#/components/schemas/ULID'
-            - nullable: true
-    Invoice:
-      type: object
-      required:
-        - id
-        - createdAt
-      nullable: true
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        createdAt:
-          type: string
-          format: date-time
-          readOnly: true
-    DepositInvoice:
       allOf:
         - $ref: '#/components/schemas/Invoice'
-        - type: object
-          required:
-            - amountMinor
-            - currency
-            - creditedAt
-          properties:
-            amountMinor:
-              type: integer
-            currency:
-              $ref: '#/components/schemas/Currency'
-            creditedAt:
-              type: string
-              format: date-time
-              readOnly: true
-              nullable: true
-    ReportingInvoice:
-      readOnly: true
-      allOf:
-        - type: object
-          required:
-            - id
-            - createdAt
-          nullable: true
-          properties:
-            id:
-              type: integer
-              readOnly: true
-            createdAt:
-              type: string
-              format: date-time
-              readOnly: true
-        - type: object
-          required:
-            - firstName
-            - lastName
-            - email
-            - phone
-          properties:
-            firstName:
-              type: string
-              nullable: true
-            lastName:
-              type: string
-              nullable: true
-            email:
-              type: string
-              format: email
-              nullable: true
-            phone:
-              allOf:
-                - $ref: '#/components/schemas/PhoneNumber'
-                - nullable: true
+        - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
           required:
             - currency
@@ -620,78 +550,123 @@ components:
               type: string
               format: date-time
               nullable: true
-    JSONPatch:
-      oneOf:
-        - type: object
-          required:
-            - op
-            - path
-            - value
-          properties:
-            op:
-              allOf:
-                - $ref: '#/components/schemas/JSONPatchOp'
-                - enum:
-                    - add
-                    - replace
-                    - test
-            path:
-              $ref: '#/components/schemas/JSONPatchPath'
-            value:
-              $ref: '#/components/schemas/JSONPatchValue'
-        - type: object
-          required:
-            - op
-            - path
-          properties:
-            op:
-              allOf:
-                - $ref: '#/components/schemas/JSONPatchOp'
-                - enum:
-                    - remove
-            path:
-              $ref: '#/components/schemas/JSONPatchPath'
-    JSONPatchOp:
-      type: string
-      description: The operation to be carried out
-    JSONPatchPath:
-      type: string
-      description: A path in the request object of the related POST request following modified JSON patch syntax
-      example: /my/path/12/asd
-    JSONPatchValue:
-      description: The value used for the operation (any type)
-    PaginationLinks:
+    DetailedInvoiceWrapped:
       type: object
       required:
-        - current
-        - next
-        - prev
+        - data
       properties:
-        current:
-          type: string
-          format: url
-          nullable: true
-        next:
-          type: string
-          format: url
-          nullable: true
-        prev:
-          type: string
-          format: url
-          nullable: true
-    PhoneNumber:
+        data:
+          $ref: '#/components/schemas/DetailedInvoice'
+    WidgetInfo:
+      type: object
+      properties: {}
+    AccessStatus:
       type: string
-      format: phone
-      example: '+4712345678'
-    Currency:
-      type: string
-      format: currency
-      minLength: 3
-      maxLength: 3
-      example: NOK
-    ULID:
-      type: string
-      format: ulid
-      example: 01F8MECHZX3TBDSZ7XR8H8JHAF
-      pattern: '^[0-7][0-9A-HJKMNP-TV-Z]{25}$'
-      readOnly: true
+      enum:
+        - public
+        - private
+        - api-only
+    TicketOption:
+      type: object
+      properties: {}
+    StaffRequirement:
+      type: object
+      properties: {}
+    Location:
+      type: object
+      properties: {}
+    Product:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        description:
+          type: string
+        web:
+          $ref: '#/components/schemas/WidgetInfo'
+        cutoff:
+          type: integer
+        accessStatus:
+          $ref: '#/components/schemas/AccessStatus'
+        ticketOptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketOption'
+        termsAndConditions: {}
+        staffRequirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaffRequirement'
+        location:
+          $ref: '#/components/schemas/Location'
+    ProductWrapped:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          $ref: '#/components/schemas/Product'
+  parameters:
+    PageCursor:
+      name: page
+      in: query
+      description: The cursor pointing to a page
+      schema:
+        type: string
+        format: base64
+        example: MXwwMUhDOVpIVkpSVEZZQ1gzMUdZVkQ5WDEzMXxuZXh0
+    PerPage:
+      name: per_page
+      in: query
+      description: Number of records per page
+      schema:
+        type: integer
+        minimum: 1
+    BookingId:
+      name: booking
+      in: path
+      required: true
+      description: The booking ID
+      schema:
+        type: string
+        format: uuid
+    InvoiceRef:
+      name: invoice
+      in: path
+      required: true
+      description: The invoice ref
+      schema:
+        type: integer
+        minimum: 0
+      example: '100427'
+    ProductId:
+      name: product
+      in: path
+      required: true
+      description: The product ID
+      schema:
+        type: integer
+        minimum: 0
+  responses:
+    404NotFound:
+      description: Not found error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              description:
+                type: string
+              details:
+                type: object
+                properties: {}
+              code:
+                type: integer

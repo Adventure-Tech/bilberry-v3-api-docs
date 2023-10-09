@@ -18,7 +18,7 @@ paths:
   /bookings/{booking}:
     $ref: './api/bookings/Booking.yaml'
   /invoices/{invoice}:
-    $ref: './api/reporting/Invoices.yaml'
+    $ref: './api/reporting/Invoice.yaml'
   /products:
     $ref: './api/products/Products.yaml'
   /product/{product}:
@@ -31,18 +31,3 @@ paths:
   /reports: {}
   /notifications: {}
   /staff: {}
-
-components:
-  parameters:
-    $ref: './parameters/_index.yaml'
-  responses:
-    $ref: './responses/_index.yaml'
-  schemas:
-    $ref: './schemas/_index.yaml'
-
-
-
-
-
-              
-    

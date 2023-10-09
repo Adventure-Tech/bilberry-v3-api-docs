@@ -1,5 +1,0 @@
-404NotFound:
-  $ref: './404NotFound.yaml'
-#    401Unauthorized:
-#    403Forbidden:
-#    500ServerError:
