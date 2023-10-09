@@ -1,28 +1,35 @@
 ProductWrapped:
+  $ref: './products/ProductWrapped.yaml'
 Product:
+  $ref: './products/Product.yaml'
 WidgetInfo:
+  $ref: './products/WidgetInfo.yaml'
 TicketOption:
+  $ref: './products/TicketOption.yaml'
 StaffRequirement:
+  $ref: './products/StaffRequirement.yaml'
 Location:
+  $ref: './products/Location.yaml'
 ProductAccessStatus:
+  $ref: './products/AccessStatus.yaml'
 
-BookingWrapped:
-Booking:
-BookingMetaInfo:
-Payment:
-OnlinePayment:
-Invoice:
-DepositInvoice:
-
-ReportingInvoice:
-
-JSONPatch:
-JSONPatchOp:
-JSONPatchPath:
-JSONPatchValue:
-
-PaginationLinks:
-
-PhoneNumber:
-Currency:
-ULID:
+#BookingWrapped:
+#Booking:
+#BookingMetaInfo:
+#Payment:
+#OnlinePayment:
+#Invoice:
+#DepositInvoice:
+#
+#ReportingInvoice:
+#
+#JSONPatch:
+#JSONPatchOp:
+#JSONPatchPath:
+#JSONPatchValue:
+#
+#PaginationLinks:
+#
+#PhoneNumber:
+#Currency:
+#ULID:
