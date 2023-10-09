@@ -1,0 +1,14 @@
+allOf:
+  - $ref: './Invoice.yaml'
+  - type: object
+    required: [amountMinor, currency, creditedAt]
+    properties:
+      amountMinor:
+        type: integer
+      currency:
+        $ref: '../types/Currency.yaml'
+      creditedAt:
+        type: string
+        format: date-time
+        readOnly: true
+        nullable: true

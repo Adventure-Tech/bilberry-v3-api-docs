@@ -1,0 +1,60 @@
+allOf:
+  - type: object
+    required: [id]
+    properties:
+      id:
+        $ref: '../types/ULID.yaml'
+  - $ref: './BookingMetaInfo.yaml'
+  - type: object
+    required: [expiresAt, tickets, invoice, creditedInvoices, depositInvoices, payments, onlinePayments]
+    properties:
+      expiresAt:
+        type: string
+        format: date-time
+        nullable: true
+        readOnly: true
+      tickets:
+        type: array
+        items:
+          type: object
+          required: [ id, bookableId, quantity ]
+          properties:
+            id:
+              $ref: '../types/ULID.yaml'
+            bookableId:
+              type: integer
+            quantity:
+              type: integer
+              minimum: 1
+              default: 1
+              # TODO: more info about product, ticket option etc?
+      invoice:
+        allOf:
+          - $ref: './Invoice.yaml'
+          - readOnly: true
+            nullable: true
+      creditedInvoices:
+        type: array
+        readOnly: true
+        items:
+          allOf:
+            - $ref: './Invoice.yaml'
+            - type: object
+              required: [creditedAt]
+              properties:
+                creditedAt:
+                  type: string
+                  format: date-time
+      depositInvoices:
+        type: array
+        items:
+          $ref: './DepositInvoice.yaml'
+      payments:
+        type: array
+        items:
+          $ref: './Payment.yaml'
+      onlinePayments:
+        type: array
+        readOnly: true
+        items:
+          $ref: './OnlinePayment.yaml'

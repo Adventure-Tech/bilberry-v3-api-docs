@@ -1,0 +1,2 @@
+type: string
+enum: [public, private, api-only]

@@ -1,0 +1,48 @@
+openapi: 3.0.3
+
+info:
+  title: Bilberry v3 API
+  description: The public and internal API of Bilberry v3
+  version: 0.0.0
+
+servers:
+  - url: 'https://bilberry.test/api/v0'
+  - url: 'https://bilberry-v3-staging-sxren.ondigitalocean.app/api/v0'
+
+#security:
+#  - BasicAuth: []
+
+paths:
+  /bookings:
+    $ref: './api/bookings/Bookings.yaml'
+  /bookings/{booking}:
+    $ref: './api/bookings/Booking.yaml'
+  /invoices/{invoice}:
+    $ref: './api/reporting/Invoices.yaml'
+  /products:
+    $ref: './api/products/Products.yaml'
+  /product/{product}:
+    $ref: './api/products/Product.yaml'
+
+  /users: {}
+  /instances: {}
+  /resources: {}
+  /vat-models: {}
+  /reports: {}
+  /notifications: {}
+  /staff: {}
+
+#components:
+#  parameters:
+#    $ref: './parameters/_index.yaml'
+#  responses:
+#    $ref: './responses/_index.yaml'
+#  schemas:
+#    $ref: './schemas/_index.yaml'
+
+
+
+
+
+              
+    

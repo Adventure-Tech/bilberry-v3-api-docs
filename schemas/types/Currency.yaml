@@ -1,0 +1,5 @@
+type: string
+format: currency
+minLength: 3
+maxLength: 3
+example: NOK

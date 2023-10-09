@@ -1,0 +1,14 @@
+get:
+  description: Returns a single invoice based on its reference
+  parameters:
+    - $ref: '../../parameters/path/InvoiceRef.yaml'
+  tags: [Reporting API]
+  responses:
+    200:
+      description: Successfully retrieved the invoice from the server
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/bookings/BookingWrapped.yaml'
+    404:
+      $ref: '../../responses/404NotFound.yaml'

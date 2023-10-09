@@ -1,0 +1,6 @@
+name: per_page
+in: query
+description: Number of records per page
+schema:
+  type: integer
+  minimum: 1

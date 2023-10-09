@@ -1,0 +1,7 @@
+name: product
+in: path
+required: true
+description: The product ID
+schema:
+  type: integer
+  minimum: 0

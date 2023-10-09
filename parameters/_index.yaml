@@ -1,0 +1,10 @@
+ProductId:
+  $ref: './path/ProductId.yaml'
+BookingId:
+  $ref: './path/BookingId.yaml'
+InvoiceRef:
+  $ref: './path/InvoiceRef.yaml'
+PageCursor:
+  $ref: './query/PageCursor.yaml'
+PerPage:
+  $ref: './query/PerPage.yaml'

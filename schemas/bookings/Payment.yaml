@@ -1,0 +1,16 @@
+type: object
+required: [id, currency, amountMinor, createdAt, type]
+properties:
+  id:
+    $ref: '../types/ULID.yaml'
+  currency:
+    $ref: '../types/Currency.yaml'
+  amountMinor:
+    type: integer
+  createdAt:
+    type: string
+    format: date-time
+    readOnly: true
+  type:
+    type: string
+    enum: [online, checkout, ...]

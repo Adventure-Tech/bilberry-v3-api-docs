@@ -1,0 +1,5 @@
+type: string
+format: ulid
+example: 01F8MECHZX3TBDSZ7XR8H8JHAF
+pattern: ^[0-7][0-9A-HJKMNP-TV-Z]{25}$
+readOnly: true

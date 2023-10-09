@@ -1,0 +1,15 @@
+type: object
+required: [current, next, prev]
+properties:
+  current:
+    type: string
+    format: url
+    nullable: true
+  next:
+    type: string
+    format: url
+    nullable: true
+  prev:
+    type: string
+    format: url
+    nullable: true
