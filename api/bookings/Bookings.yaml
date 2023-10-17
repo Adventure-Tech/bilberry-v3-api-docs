@@ -1,5 +1,5 @@
 get:
-  description: Returns list of bookings
+  description: Returns paginated list of bookings
   tags: [Bookings API]
   parameters:
     - name: name

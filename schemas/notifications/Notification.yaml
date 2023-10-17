@@ -1,0 +1,18 @@
+type: object
+required: [id, name, description, active, triggers, createdAt]
+properties:
+  id:
+    type: integer
+    readOnly: true
+  name:
+    type: string
+  description:
+    type: string
+  active:
+    type: boolean
+  triggers:
+    type: array
+    items:
+      $ref: './Trigger.yaml'
+  createdAt:
+    $ref: '../CreatedAt.yaml'

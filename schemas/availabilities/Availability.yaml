@@ -1,0 +1,23 @@
+type: object
+required:
+  - productId
+  - ticketOptionId
+  - bookableId
+  - availability
+properties:
+  productId:
+    type: integer
+  ticketOptionId:
+    type: integer
+  bookableId:
+    type: integer
+  availability:
+    type: integer
+    minimum: 0
+  start:
+    type: string
+    format: date-time
+  end:
+    type: string
+    format: date-time
+  # cutoff, refund policy, price,

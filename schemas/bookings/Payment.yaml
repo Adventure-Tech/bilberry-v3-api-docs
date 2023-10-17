@@ -8,9 +8,7 @@ properties:
   amountMinor:
     type: integer
   createdAt:
-    type: string
-    format: date-time
-    readOnly: true
+    $ref: '../CreatedAt.yaml'
   type:
     type: string
     enum: [online, checkout, ...]

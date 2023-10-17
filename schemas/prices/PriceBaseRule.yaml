@@ -1,0 +1,9 @@
+oneOf:
+priceMinor:
+  type: integer
+  minimum: 0
+
+
+
+#{"base":[{"priceMinor":100000,"flatFeeMinor":5000,"rangeFrom":1,"rangeTo":5},{"priceMinor":80000,"flatFeeMinor":5000,"rangeFrom":6,"rangeTo":10},{"priceMinor":60000,"flatFeeMinor":5000,"rangeFrom":11,"rangeTo":15}],"additional":[]}
+#{"base":[{"priceMinor":138296,"flatFeeMinor":null,"rangeFrom":null,"rangeTo":null}],"additional":[]}

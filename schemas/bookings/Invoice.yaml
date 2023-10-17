@@ -6,6 +6,4 @@ properties:
     type: integer
     readOnly: true
   createdAt:
-    type: string
-    format: date-time
-    readOnly: true
+    $ref: '../CreatedAt.yaml'

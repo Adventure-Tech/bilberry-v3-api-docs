@@ -1,5 +1,5 @@
 get:
-  description: Returns list of products
+  description: Returns paginated list of products
   tags: [ Products API ]
   parameters:
     - $ref: '../../parameters/query/PageCursor.yaml'

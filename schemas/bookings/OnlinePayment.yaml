@@ -13,8 +13,7 @@ properties:
   amountMinor:
     type: integer
   createdAt:
-    type: string
-    format: date-time
+    $ref: '../CreatedAt.yaml'
   status:
     type: string
     enum: [created, timed-out, completed, cancelled]
