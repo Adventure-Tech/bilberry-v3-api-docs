@@ -1,2 +1,14 @@
-type: object
-properties:
+allOf:
+  - $ref: './CancellationPolicyShort.yaml'
+  - type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      rules:
+        type: array
+        items:
+          type: object
+      validFrom:
+        $ref: '../types/ValidFrom.yaml'

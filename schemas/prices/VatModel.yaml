@@ -1,2 +1,9 @@
-type: object
-properties:
+allOf:
+  - $ref: './VatModelShort.yaml'
+  - type: object
+    required: [rules, validFrom]
+    properties:
+      rules:
+        $ref: './VatRule.yaml'
+      validFrom:
+        $ref: '../types/ValidFrom.yaml'

@@ -1,13 +1,11 @@
-type: object
-required: [name, capacity, isManaged]
-properties:
-  name:
-    type: string
-  capacity:
-    type: integer
-  isManaged:
-    type: boolean
-  createdAt:
-    type: string
-    format: date-time
-    readOnly: true
+allOf:
+  - $ref: './ResourceShort.yaml'
+  - type: object
+    required: [name, capacity, isManaged]
+    properties:
+      name:
+        type: string
+      capacity:
+        type: integer
+      isManaged:
+        type: boolean

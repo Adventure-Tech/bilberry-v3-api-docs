@@ -1,5 +1,5 @@
 allOf:
-  - $ref: './Invoice.yaml'
+  - $ref: '../reporting/InvoiceShort.yaml'
   - type: object
     required: [amountMinor, currency, creditedAt]
     properties:

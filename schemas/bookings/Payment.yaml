@@ -8,7 +8,7 @@ properties:
   amountMinor:
     $ref: '../types/MinorAmount.yaml'
   createdAt:
-    $ref: '../CreatedAt.yaml'
+    $ref: '../types/CreatedAt.yaml'
   type:
     type: string
     enum: [online, checkout, ...]

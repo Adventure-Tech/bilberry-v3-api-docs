@@ -3,6 +3,7 @@ required: [id, provider, currency, amountMinor, createdAt, status, statusAt, bil
 readOnly: true
 properties:
   id:
+    # TODO: extract UUID type or switch to existing ID or ULID types
     type: string
     format: uuid
   provider:
@@ -13,7 +14,7 @@ properties:
   amountMinor:
     $ref: '../types/MinorAmount.yaml'
   createdAt:
-    $ref: '../CreatedAt.yaml'
+    $ref: '../types/CreatedAt.yaml'
   status:
     type: string
     enum: [created, timed-out, completed, cancelled]

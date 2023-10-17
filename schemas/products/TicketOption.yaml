@@ -18,8 +18,8 @@ properties:
   vatModels:
     type: array
     items:
-      $ref: '../prices/VatModel.yaml'
+      $ref: '../prices/VatModelShort.yaml'
   cancellationPolicies:
     type: array
     items:
-      $ref: './CancellationPolicy.yaml'
+      $ref: './CancellationPolicyShort.yaml'

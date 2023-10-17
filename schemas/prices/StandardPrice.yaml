@@ -1,4 +1,5 @@
 type: object
+required: [type, priceMinor]
 properties:
   type:
     $ref: './PriceType.yaml'

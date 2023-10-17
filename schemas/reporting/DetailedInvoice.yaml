@@ -1,35 +1,5 @@
-readOnly: true
-allOf:
-  - $ref: '../bookings/Invoice.yaml'
-  - $ref: '../bookings/BookingMetaInfo.yaml'
-  - type: object
-    required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, creditedAt]
-    properties:
-      currency:
-        $ref: '../types/Currency.yaml'
-      # TODO: amount minor | string vs integer vs float
-      totalAmountGross:
-        type: integer
-      totalAmountNet:
-        type: integer
-      totalAmountVAT:
-        type: integer
-      items:
-        type: array
-        items:
-          type: object
-          properties:
-            name:
-              type: string
-            amountNet:
-              type: integer
-            amountGross:
-              type: integer
-            amountVAT:
-              type: integer
-            quantity:
-              type: integer
-      creditedAt:
-        type: string
-        format: date-time
-        nullable: true
+type: object
+required: [data]
+properties:
+  data:
+    $ref: './Invoice.yaml'

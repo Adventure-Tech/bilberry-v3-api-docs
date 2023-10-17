@@ -2,7 +2,7 @@ type: object
 required: [resource, capacity reduction, mode, createdAt, startOffset, endOffset]
 properties:
   resource:
-    $ref: '../resources/Resource.yaml'
+    $ref: '../resources/ResourceShort.yaml'
   capacityReduction:
     type: integer
   mode:
@@ -18,4 +18,4 @@ properties:
     default: 1
     minimum: 1
   createdAt:
-    $ref: '../CreatedAt.yaml'
+    $ref: '../types/CreatedAt.yaml'

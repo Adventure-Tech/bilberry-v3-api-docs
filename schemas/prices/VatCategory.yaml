@@ -1,5 +1,5 @@
 type: object
-required: [id, name, description, active, triggers, createdAt]
+required: [id, name, description, code, percentMinor, createdAt]
 properties:
   id:
     $ref: '../types/ID.yaml'
@@ -7,11 +7,9 @@ properties:
     type: string
   description:
     type: string
-  active:
-    type: boolean
-  triggers:
-    type: array
-    items:
-      $ref: './Trigger.yaml'
+  code:
+    type: string
+  percentMinor:
+    $ref: '../types/MinorPercentage.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'

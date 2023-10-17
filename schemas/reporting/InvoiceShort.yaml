@@ -3,7 +3,6 @@ required: [id, createdAt]
 nullable: true
 properties:
   id:
-    type: integer
-    readOnly: true
+    $ref: '../types/ID.yaml'
   createdAt:
-    $ref: '../CreatedAt.yaml'
+    $ref: '../types/CreatedAt.yaml'

@@ -9,10 +9,15 @@ allOf:
         graduated: './ComplexPrice.yaml'
         volume: './ComplexPrice.yaml'
   - type: object
+    required: [id, additionalRules, createdAt, validFrom]
     properties:
+      id:
+        $ref: '../types/ID.yaml'
       additionalRules:
         type: array
         items:
           type: object
       createdAt:
-        $ref: '../CreatedAt.yaml'
+        $ref: '../types/CreatedAt.yaml'
+      validFrom:
+        $ref: '../types/ValidFrom.yaml'
