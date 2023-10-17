@@ -1,17 +1,18 @@
-type: object
-required: [type, rules, createdAt]
-properties:
-  type:
-    type: string
-    enum: [standard, graduated, volume]
-  rules:
-    type: object
+allOf:
+  - oneOf:
+    - $ref: './StandardPrice.yaml'
+    - $ref: './ComplexPrice.yaml'
+    discriminator:
+      propertyName: type
+      mapping:
+        standard: './StandardPrice.yaml'
+        graduated: './ComplexPrice.yaml'
+        volume: './ComplexPrice.yaml'
+  - type: object
     properties:
-      base:
+      additionalRules:
         type: array
         items:
-          $ref: './PriceBaseRule.yaml'
-      additional:
-        type: array
-  createdAt:
-    $ref: '../CreatedAt.yaml'
+          type: object
+      createdAt:
+        $ref: '../CreatedAt.yaml'

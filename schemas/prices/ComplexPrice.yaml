@@ -1,0 +1,16 @@
+type: object
+properties:
+  type:
+    $ref: './PriceType.yaml'
+  rules:
+    type: array
+    items:
+      type: object
+      properties:
+        priceMinor:
+          $ref: '../types/MinorAmount.yaml'
+        flatFeeMinor:
+          $ref: '../types/MinorAmount.yaml'
+        rangeFrom:
+          type: integer
+          minimum: 1

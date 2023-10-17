@@ -1,0 +1,6 @@
+type: object
+properties:
+  type:
+    $ref: './PriceType.yaml'
+  priceMinor:
+    $ref: '../types/MinorAmount.yaml'

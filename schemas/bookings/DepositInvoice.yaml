@@ -4,7 +4,7 @@ allOf:
     required: [amountMinor, currency, creditedAt]
     properties:
       amountMinor:
-        type: integer
+        $ref: '../types/MinorAmount.yaml'
       currency:
         $ref: '../types/Currency.yaml'
       creditedAt:

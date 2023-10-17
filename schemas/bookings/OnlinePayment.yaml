@@ -11,7 +11,7 @@ properties:
   currency:
     $ref: '../types/Currency.yaml'
   amountMinor:
-    type: integer
+    $ref: '../types/MinorAmount.yaml'
   createdAt:
     $ref: '../CreatedAt.yaml'
   status:

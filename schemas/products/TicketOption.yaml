@@ -14,7 +14,7 @@ properties:
   prices:
     type: array
     items:
-      $ref: '../prices//Price.yaml'
+      $ref: '../prices/Price.yaml'
   vatModels:
     type: array
     items:
