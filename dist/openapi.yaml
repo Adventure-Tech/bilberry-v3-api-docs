@@ -480,6 +480,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/IDwritable'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     CancellationPolicyShort:
@@ -490,6 +492,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/IDwritable'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     TicketOption:
