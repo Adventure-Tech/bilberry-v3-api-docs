@@ -9,6 +9,6 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/reporting/DetailedInvoiceWrapped.yaml'
+            $ref: '../../schemas/reporting/InvoiceWrapped.yaml'
     404:
       $ref: '../../responses/404NotFound.yaml'
