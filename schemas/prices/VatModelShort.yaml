@@ -2,6 +2,6 @@ type: object
 required: [id, createdAt]
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/IDwritable.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
