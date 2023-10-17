@@ -252,7 +252,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DetailedInvoiceWrapped'
+                $ref: '#/components/schemas/InvoiceWrapped'
         '404':
           $ref: '#/components/responses/404NotFound'
   /notifications:
@@ -326,6 +326,10 @@ components:
         minimum: 0
       example: '100427'
   schemas:
+    ID:
+      type: integer
+      minimum: 1
+      readOnly: true
     WidgetInfo:
       type: object
       properties: {}
@@ -335,37 +339,30 @@ components:
         - public
         - private
         - api-only
-    Resource:
-      type: object
-      required:
-        - name
-        - capacity
-        - isManaged
-      properties:
-        name:
-          type: string
-        capacity:
-          type: integer
-        isManaged:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-          readOnly: true
-    CapacityMode:
-      type: string
-      enum:
-        - FULLY_SHARED
-        - SINGLE_INSTANCE
-        - SINGLE_TICKET_OPTION
-        - SINGLE_BOOKABLE
-        - SINGLE_BOOKING
-        - SINGLE_TICKET
-        - SINGLE_PRODUCT
     CreatedAt:
       type: string
       format: date-time
       readOnly: true
+    ResourceShort:
+      type: object
+      required:
+        - id
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+    CapacityMode:
+      type: string
+      enum:
+        - fully-shared
+        - single-instance
+        - single-ticket-option
+        - single-bookable
+        - single-booking
+        - single-ticket
+        - single-product
     ResourceRequirement:
       type: object
       required:
@@ -377,7 +374,7 @@ components:
         - endOffset
       properties:
         resource:
-          $ref: '#/components/schemas/Resource'
+          $ref: '#/components/schemas/ResourceShort'
         capacityReduction:
           type: integer
         mode:
@@ -405,6 +402,9 @@ components:
       minimum: 0
     StandardPrice:
       type: object
+      required:
+        - type
+        - priceMinor
       properties:
         type:
           $ref: '#/components/schemas/PriceType'
@@ -412,13 +412,23 @@ components:
           $ref: '#/components/schemas/MinorAmount'
     ComplexPrice:
       type: object
+      required:
+        - id
+        - type
+        - rules
       properties:
+        id:
+          $ref: '#/components/schemas/ID'
         type:
           $ref: '#/components/schemas/PriceType'
         rules:
           type: array
           items:
             type: object
+            required:
+              - priceMinor
+              - flatFeeMinor
+              - rangeFrom
             properties:
               priceMinor:
                 $ref: '#/components/schemas/MinorAmount'
@@ -443,7 +453,14 @@ components:
               graduated: '#/components/schemas/ComplexPrice'
               volume: '#/components/schemas/ComplexPrice'
         - type: object
+          required:
+            - id
+            - additionalRules
+            - createdAt
+            - validFrom
           properties:
+            id:
+              $ref: '#/components/schemas/ID'
             additionalRules:
               type: array
               items:
@@ -452,62 +469,26 @@ components:
               $ref: '#/components/schemas/CreatedAt'
             validFrom:
               $ref: '#/components/schemas/ValidFrom'
-    MinorPercentage:
-      type: integer
-      minimum: 0
-      maximum: 10000
-    VatCategory:
+    VatModelShort:
       type: object
+      required:
+        - id
+        - createdAt
       properties:
-        name:
-          type: string
-        description:
-          type: string
-        code:
-          type: string
-        percentMinor:
-          $ref: '#/components/schemas/MinorPercentage'
+        id:
+          $ref: '#/components/schemas/ID'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
-    VatModel:
+    CancellationPolicyShort:
       type: object
+      required:
+        - id
+        - createdAt
       properties:
-        rules:
-          type: object
-          properties:
-            default:
-              $ref: '#/components/schemas/VatCategory'
-            fixed:
-              type: array
-              items:
-                allOf:
-                  - type: object
-                    properties:
-                      amountMinor:
-                        $ref: '#/components/schemas/MinorAmount'
-                      description:
-                        type: string
-                  - $ref: '#/components/schemas/VatCategory'
-            percentage:
-              type: array
-              items:
-                allOf:
-                  - type: object
-                    properties:
-                      percentMinor:
-                        $ref: '#/components/schemas/MinorPercentage'
-                      description:
-                        type: string
-                  - $ref: '#/components/schemas/VatCategory'
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
-    CancellationPolicy:
-      type: object
-      properties:
-        content:
-          type: string
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
+        id:
+          $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
     TicketOption:
       type: object
       required:
@@ -536,11 +517,11 @@ components:
         vatModels:
           type: array
           items:
-            $ref: '#/components/schemas/VatModel'
+            $ref: '#/components/schemas/VatModelShort'
         cancellationPolicies:
           type: array
           items:
-            $ref: '#/components/schemas/CancellationPolicy'
+            $ref: '#/components/schemas/CancellationPolicyShort'
     StaffRequirement:
       type: object
       properties: {}
@@ -554,8 +535,7 @@ components:
         - description
       properties:
         id:
-          type: integer
-          readOnly: true
+          $ref: '#/components/schemas/ID'
         name:
           type: string
         description:
@@ -698,7 +678,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/PhoneNumber'
             - nullable: true
-    Invoice:
+    InvoiceShort:
       type: object
       required:
         - id
@@ -706,8 +686,7 @@ components:
       nullable: true
       properties:
         id:
-          type: integer
-          readOnly: true
+          $ref: '#/components/schemas/ID'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     Currency:
@@ -718,7 +697,7 @@ components:
       example: NOK
     DepositInvoice:
       allOf:
-        - $ref: '#/components/schemas/Invoice'
+        - $ref: '#/components/schemas/InvoiceShort'
         - type: object
           required:
             - amountMinor
@@ -841,7 +820,7 @@ components:
                     default: 1
             invoice:
               allOf:
-                - $ref: '#/components/schemas/Invoice'
+                - $ref: '#/components/schemas/InvoiceShort'
                 - readOnly: true
                   nullable: true
             creditedInvoices:
@@ -849,7 +828,7 @@ components:
               readOnly: true
               items:
                 allOf:
-                  - $ref: '#/components/schemas/Invoice'
+                  - $ref: '#/components/schemas/InvoiceShort'
                   - type: object
                     required:
                       - creditedAt
@@ -877,10 +856,10 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Booking'
-    DetailedInvoice:
+    Invoice:
       readOnly: true
       allOf:
-        - $ref: '#/components/schemas/Invoice'
+        - $ref: '#/components/schemas/InvoiceShort'
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
           required:
@@ -918,13 +897,13 @@ components:
               type: string
               format: date-time
               nullable: true
-    DetailedInvoiceWrapped:
+    InvoiceWrapped:
       type: object
       required:
         - data
       properties:
         data:
-          $ref: '#/components/schemas/DetailedInvoice'
+          $ref: '#/components/schemas/Invoice'
     Condition:
       type: object
       required:
@@ -966,8 +945,7 @@ components:
         - createdAt
       properties:
         id:
-          type: integer
-          readOnly: true
+          $ref: '#/components/schemas/ID'
         name:
           type: string
         description:
