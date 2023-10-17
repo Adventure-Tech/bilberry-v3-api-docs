@@ -469,6 +469,9 @@ components:
               $ref: '#/components/schemas/CreatedAt'
             validFrom:
               $ref: '#/components/schemas/ValidFrom'
+    IDwritable:
+      type: integer
+      minimum: 1
     VatModelShort:
       type: object
       required:
@@ -476,7 +479,7 @@ components:
         - createdAt
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/IDwritable'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     CancellationPolicyShort:
@@ -486,7 +489,7 @@ components:
         - createdAt
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/IDwritable'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     TicketOption:
