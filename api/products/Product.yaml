@@ -23,14 +23,7 @@ patch:
         schema:
           type: array
           items:
-            oneOf:
-              - $ref: '../../schemas/jsonpatch/PatchObject.yaml'
-              - type: object
-                properties:
-                  op:
-                    type: string
-                    description: Custom JSON Patch operations for this endpoint
-                    enum: [ create-invoice, cancel-invoice, create-online-payment ]
+            $ref: '../../schemas/jsonpatch/PatchObject.yaml'
   responses:
     200:
       description: Successfully updated the product on the server

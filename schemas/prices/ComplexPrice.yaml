@@ -1,0 +1,20 @@
+type: object
+required: [id, type, rules]
+properties:
+  id:
+    $ref: '../types/ID.yaml'
+  type:
+    $ref: './PriceType.yaml'
+  rules:
+    type: array
+    items:
+      type: object
+      required: [priceMinor, flatFeeMinor, rangeFrom]
+      properties:
+        priceMinor:
+          $ref: '../types/MinorAmount.yaml'
+        flatFeeMinor:
+          $ref: '../types/MinorAmount.yaml'
+        rangeFrom:
+          type: integer
+          minimum: 1

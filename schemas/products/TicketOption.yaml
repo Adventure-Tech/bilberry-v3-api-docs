@@ -1,2 +1,25 @@
 type: object
-properties: {}
+required: [name, minimumAge, maximumAge, resourceRequirements, prices, vatModels, cancellationPolicies]
+properties:
+  name:
+    type: string
+  minimumAge:
+    type: integer
+  maximumAge:
+    type: integer
+  resourceRequirements:
+    type: array
+    items:
+      $ref: './ResourceRequirement.yaml'
+  prices:
+    type: array
+    items:
+      $ref: '../prices/Price.yaml'
+  vatModels:
+    type: array
+    items:
+      $ref: '../prices/VatModelShort.yaml'
+  cancellationPolicies:
+    type: array
+    items:
+      $ref: './CancellationPolicyShort.yaml'

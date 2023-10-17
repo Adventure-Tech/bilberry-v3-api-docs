@@ -30,7 +30,7 @@ allOf:
               # TODO: more info about product, ticket option etc?
       invoice:
         allOf:
-          - $ref: './Invoice.yaml'
+          - $ref: '../reporting/InvoiceShort.yaml'
           - readOnly: true
             nullable: true
       creditedInvoices:
@@ -38,7 +38,7 @@ allOf:
         readOnly: true
         items:
           allOf:
-            - $ref: './Invoice.yaml'
+            - $ref: '../reporting/InvoiceShort.yaml'
             - type: object
               required: [creditedAt]
               properties:
@@ -48,7 +48,7 @@ allOf:
       depositInvoices:
         type: array
         items:
-          $ref: './DepositInvoice.yaml'
+          $ref: '../reporting/DepositInvoice.yaml'
       payments:
         type: array
         items:

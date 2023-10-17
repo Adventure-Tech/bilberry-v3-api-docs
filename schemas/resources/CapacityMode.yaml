@@ -1,0 +1,9 @@
+type: string
+enum:
+  - fully-shared
+  - single-instance
+  - single-ticket-option
+  - single-bookable
+  - single-booking
+  - single-ticket
+  - single-product

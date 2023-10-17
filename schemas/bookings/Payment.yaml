@@ -6,11 +6,9 @@ properties:
   currency:
     $ref: '../types/Currency.yaml'
   amountMinor:
-    type: integer
+    $ref: '../types/MinorAmount.yaml'
   createdAt:
-    type: string
-    format: date-time
-    readOnly: true
+    $ref: '../types/CreatedAt.yaml'
   type:
     type: string
     enum: [online, checkout, ...]

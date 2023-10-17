@@ -1,0 +1,14 @@
+type: object
+required: [description, type, rules]
+properties:
+  description:
+    type: string
+  type:
+    type: string
+  rules:
+    type: object
+    properties:
+      value:
+        type: integer
+      operator:
+        type: string

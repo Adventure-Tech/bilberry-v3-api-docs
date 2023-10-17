@@ -13,21 +13,24 @@ servers:
 #  - BasicAuth: []
 
 paths:
+  /products:
+    $ref: './api/products/Products.yaml'
+  /product/{product}:
+    $ref: './api/products/Product.yaml'
+  /availabilities:
+    $ref: './api/availability/Availabilities.yaml'
   /bookings:
     $ref: './api/bookings/Bookings.yaml'
   /bookings/{booking}:
     $ref: './api/bookings/Booking.yaml'
   /invoices/{invoice}:
     $ref: './api/reporting/Invoice.yaml'
-  /products:
-    $ref: './api/products/Products.yaml'
-  /product/{product}:
-    $ref: './api/products/Product.yaml'
+  /notifications:
+    $ref: './api/notifications/Notifications.yaml'
 
   /users: {}
   /instances: {}
   /resources: {}
   /vat-models: {}
   /reports: {}
-  /notifications: {}
   /staff: {}

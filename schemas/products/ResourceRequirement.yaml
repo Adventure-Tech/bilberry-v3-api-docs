@@ -1,0 +1,21 @@
+type: object
+required: [resource, capacity reduction, mode, createdAt, startOffset, endOffset]
+properties:
+  resource:
+    $ref: '../resources/ResourceShort.yaml'
+  capacityReduction:
+    type: integer
+  mode:
+    $ref: '../resources/CapacityMode.yaml'
+  startOffset:
+    type: integer
+    default: 0
+  endOffset:
+    type: integer
+    default: 0
+  alternative:
+    type: integer
+    default: 1
+    minimum: 1
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'

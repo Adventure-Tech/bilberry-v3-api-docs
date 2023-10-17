@@ -1,6 +1,6 @@
 readOnly: true
 allOf:
-  - $ref: '../bookings/Invoice.yaml'
+  - $ref: './InvoiceShort.yaml'
   - $ref: '../bookings/BookingMetaInfo.yaml'
   - type: object
     required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, creditedAt]

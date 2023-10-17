@@ -2,4 +2,4 @@ type: object
 required: [data]
 properties:
   data:
-    $ref: './DetailedInvoice.yaml'
+    $ref: './Invoice.yaml'

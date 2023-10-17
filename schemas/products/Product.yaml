@@ -4,8 +4,7 @@ required:
   - description
 properties:
   id:
-    type: integer
-    readOnly: true
+    $ref: '../types/ID.yaml'
   name:
     type: string
   description:
