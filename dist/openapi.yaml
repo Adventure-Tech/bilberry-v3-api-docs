@@ -408,8 +408,13 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/PriceType'
-        priceMinor:
-          $ref: '#/components/schemas/MinorAmount'
+        rules:
+          type: object
+          required:
+            - priceMinor
+          properties:
+            priceMinor:
+              $ref: '#/components/schemas/MinorAmount'
     ComplexPrice:
       type: object
       required:
@@ -477,13 +482,14 @@ components:
       required:
         - id
         - createdAt
+        - validFrom
       properties:
         id:
           $ref: '#/components/schemas/IDwritable'
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
     CancellationPolicyShort:
       type: object
       required:
@@ -492,10 +498,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/IDwritable'
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
     TicketOption:
       type: object
       required:
