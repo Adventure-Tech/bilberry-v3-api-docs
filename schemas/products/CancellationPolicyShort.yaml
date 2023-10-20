@@ -3,7 +3,7 @@ required: [id, createdAt]
 properties:
   id:
     $ref: '../types/IDwritable.yaml'
-  validFrom:
-    $ref: '../types/ValidFrom.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
+  validFrom:
+    $ref: '../types/ValidFrom.yaml'

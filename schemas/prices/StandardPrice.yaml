@@ -3,5 +3,9 @@ required: [type, priceMinor]
 properties:
   type:
     $ref: './PriceType.yaml'
-  priceMinor:
-    $ref: '../types/MinorAmount.yaml'
+  rules:
+    type: object
+    required: [priceMinor]
+    properties:
+      priceMinor:
+        $ref: '../types/MinorAmount.yaml'
