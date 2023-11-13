@@ -13,11 +13,9 @@ allOf:
     properties:
       id:
         $ref: '../types/ID.yaml'
+      createdAt:
+        $ref: '../types/CreatedAt.yaml'
       additionalRules:
         type: array
         items:
           type: object
-      createdAt:
-        $ref: '../types/CreatedAt.yaml'
-      validFrom:
-        $ref: '../types/ValidFrom.yaml'

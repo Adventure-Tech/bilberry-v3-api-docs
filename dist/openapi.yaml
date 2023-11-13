@@ -333,7 +333,7 @@ components:
     WidgetInfo:
       type: object
       properties: {}
-    AccessStatus:
+    ProductStatus:
       type: string
       enum:
         - public
@@ -558,7 +558,7 @@ components:
         cutoff:
           type: integer
         accessStatus:
-          $ref: '#/components/schemas/AccessStatus'
+          $ref: '#/components/schemas/ProductStatus'
         ticketOptions:
           type: array
           items:
@@ -691,6 +691,21 @@ components:
           allOf:
             - $ref: '#/components/schemas/PhoneNumber'
             - nullable: true
+    Ticket:
+      type: object
+      required:
+        - id
+        - bookableId
+        - quantity
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        bookableId:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
     InvoiceShort:
       type: object
       required:
@@ -702,45 +717,54 @@ components:
           $ref: '#/components/schemas/ID'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
-    Currency:
-      type: string
-      format: currency
-      minLength: 3
-      maxLength: 3
-      example: NOK
     DepositInvoice:
       allOf:
         - $ref: '#/components/schemas/InvoiceShort'
         - type: object
           required:
             - amountMinor
-            - currency
+            - amount
             - creditedAt
           properties:
-            amountMinor:
-              $ref: '#/components/schemas/MinorAmount'
-            currency:
-              $ref: '#/components/schemas/Currency'
+            amount: ../types/Amount.yaml
             creditedAt:
               type: string
               format: date-time
               readOnly: true
               nullable: true
+    Currency:
+      type: string
+      format: currency
+      minLength: 3
+      maxLength: 3
+      example: NOK
+    Amount:
+      type: object
+      required:
+        - minorValue
+        - currencyCode
+      properties:
+        minorValue:
+          type: integer
+          minimum: 0
+          example: 15099
+        actual:
+          type: string
+          example: 150,99
+        currencyCode:
+          $ref: '#/components/schemas/Currency'
     Payment:
       type: object
       required:
         - id
-        - currency
-        - amountMinor
+        - amount
         - createdAt
         - type
       properties:
         id:
           $ref: '#/components/schemas/ULID'
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          $ref: '#/components/schemas/MinorAmount'
+        amount:
+          $ref: '#/components/schemas/Amount'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         type:
@@ -754,8 +778,7 @@ components:
       required:
         - id
         - provider
-        - currency
-        - amountMinor
+        - amount
         - createdAt
         - status
         - statusAt
@@ -770,10 +793,8 @@ components:
           enum:
             - nets
             - stripe
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          $ref: '#/components/schemas/MinorAmount'
+        amount:
+          $ref: '#/components/schemas/Amount'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         status:
@@ -817,20 +838,7 @@ components:
             tickets:
               type: array
               items:
-                type: object
-                required:
-                  - id
-                  - bookableId
-                  - quantity
-                properties:
-                  id:
-                    $ref: '#/components/schemas/ULID'
-                  bookableId:
-                    type: integer
-                  quantity:
-                    type: integer
-                    minimum: 1
-                    default: 1
+                $ref: '#/components/schemas/Ticket'
             invoice:
               allOf:
                 - $ref: '#/components/schemas/InvoiceShort'
@@ -876,21 +884,18 @@ components:
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
           required:
-            - currency
             - totalAmountGross
             - totalAmountNet
             - totalAmountVAT
             - items
             - creditedAt
           properties:
-            currency:
-              $ref: '#/components/schemas/Currency'
             totalAmountGross:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             totalAmountNet:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             totalAmountVAT:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             items:
               type: array
               items:
@@ -899,11 +904,11 @@ components:
                   name:
                     type: string
                   amountNet:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   amountGross:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   amountVAT:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   quantity:
                     type: integer
             creditedAt:

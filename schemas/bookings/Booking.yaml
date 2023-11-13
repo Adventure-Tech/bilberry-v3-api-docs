@@ -16,18 +16,7 @@ allOf:
       tickets:
         type: array
         items:
-          type: object
-          required: [ id, bookableId, quantity ]
-          properties:
-            id:
-              $ref: '../types/ULID.yaml'
-            bookableId:
-              type: integer
-            quantity:
-              type: integer
-              minimum: 1
-              default: 1
-              # TODO: more info about product, ticket option etc?
+          $ref: './Ticket.yaml'
       invoice:
         allOf:
           - $ref: '../reporting/InvoiceShort.yaml'

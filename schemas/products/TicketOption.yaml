@@ -1,25 +1,24 @@
 type: object
-required: [name, minimumAge, maximumAge, resourceRequirements, prices, vatModels, cancellationPolicies]
+required: [name, minAge, maxAge, resourceRequirements]
 properties:
+  id:
+    $ref: '../types/ID.yaml'
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'
   name:
     type: string
-  minimumAge:
+  minAge:
     type: integer
-  maximumAge:
+    nullable: true
+  maxAge:
     type: integer
+    nullable: true
   resourceRequirements:
     type: array
     items:
       $ref: './ResourceRequirement.yaml'
-  prices:
-    type: array
-    items:
-      $ref: '../prices/Price.yaml'
-  vatModels:
-    type: array
-    items:
-      $ref: '../prices/VatModelShort.yaml'
-  cancellationPolicies:
-    type: array
-    items:
-      $ref: './CancellationPolicyShort.yaml'
+
+#  vatModels:
+#    type: array
+#    items:
+#      $ref: '../prices/VatModelShort.yaml'

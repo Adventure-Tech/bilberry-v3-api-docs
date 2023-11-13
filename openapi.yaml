@@ -7,7 +7,6 @@ info:
 
 servers:
   - url: 'https://bilberry.test/api/v0'
-  - url: 'https://bilberry-v3-staging-sxren.ondigitalocean.app/api/v0'
 
 #security:
 #  - BasicAuth: []
@@ -19,6 +18,8 @@ paths:
     $ref: './api/products/Product.yaml'
   /availabilities:
     $ref: './api/availability/Availabilities.yaml'
+  /availabilities/{availability}:
+    $ref: './api/availability/Availability.yaml'
   /bookings:
     $ref: './api/bookings/Bookings.yaml'
   /bookings/{booking}:
@@ -29,7 +30,6 @@ paths:
     $ref: './api/notifications/Notifications.yaml'
 
   /users: {}
-  /instances: {}
   /resources: {}
   /vat-models: {}
   /reports: {}
