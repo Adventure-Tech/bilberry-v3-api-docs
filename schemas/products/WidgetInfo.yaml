@@ -1,18 +1,6 @@
-type: object
-required: [minAge, minPriceMinor, duration, meetupTime, translatable]
-properties:
-  id:
-    $ref: '../types/ID.yaml'
-  createdAt:
-    $ref: '../types/CreatedAt.yaml'
-  minAge:
-    type: integer
-  minPriceMinor:
-    type: integer
-  duration:
-    type: integer
-  meetupTime:
-    type: string
-    format: time
-  translatable:
-    $ref: './WidgetInfoTranslatable.yaml'
+allOf:
+  - $ref: './WidgetInfoNonTranslatable.yaml'
+  - type: object
+    properties:
+      translatable:
+       $ref: './WidgetInfoTranslatable.yaml'
