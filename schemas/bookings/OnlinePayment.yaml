@@ -1,5 +1,5 @@
 type: object
-required: [id, provider, currency, amountMinor, createdAt, status, statusAt, bilberryPaymentId]
+required: [id, provider, amount, createdAt, status, statusAt, bilberryPaymentId]
 readOnly: true
 properties:
   id:
@@ -8,16 +8,14 @@ properties:
     format: uuid
   provider:
     type: string
-    enum: [nets, stripe]
-  currency:
-    $ref: '../types/Currency.yaml'
-  amountMinor:
-    $ref: '../types/MinorAmount.yaml'
+    enum: [NETS, STRIPE]
+  amount:
+    $ref: '../types/Amount.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   status:
     type: string
-    enum: [created, timed-out, completed, cancelled]
+    enum: [CREATED, TIMED_OUT, COMPLETED, CANCELLED]
   statusAt:
     type: string
     format: date-time

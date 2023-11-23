@@ -9,7 +9,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/products/ProductWrapped.yaml'
+            type: object
+            required: [ data ]
+            properties:
+              data:
+                $ref: '../../schemas/products/Product.yaml'
     404:
       $ref: '../../responses/404NotFound.yaml'
 patch:
@@ -30,12 +34,16 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/products/ProductWrapped.yaml'
+            type: object
+            required: [ data ]
+            properties:
+              data:
+                $ref: '../../schemas/products/Product.yaml'
 delete:
-  description: Cancel a specific product based on its ID
+  description: Soft-delete a specific product based on its ID
   tags: [ Products API ]
   parameters:
     - $ref: '../../parameters/path/ProductId.yaml'
   responses:
     200:
-      description: Successfully cancelled the product on the server
+      description: Successfully soft-deleted the product on the server

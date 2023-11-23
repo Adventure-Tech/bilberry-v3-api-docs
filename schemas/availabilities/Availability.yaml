@@ -1,18 +1,18 @@
 type: object
-required:
-  - productId
-  - ticketOptionId
-  - bookableId
-  - availability
+required: [productId, ticketOptionId, productId, availability, price, maxCapacity]
 properties:
-  productId:
-    type: integer
+  id:
+    $ref: '../types/ID.yaml'
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'
   ticketOptionId:
     type: integer
-  bookableId:
+  productId:
     type: integer
+    readOnly: true
   availability:
     type: integer
+    readOnly: true
     minimum: 0
   start:
     type: string
@@ -20,4 +20,9 @@ properties:
   end:
     type: string
     format: date-time
+  price:
+    $ref: '../prices/Price.yaml'
+  maxCapacity:
+    type: integer
+    minimum: 0
   # cutoff, refund policy, price,

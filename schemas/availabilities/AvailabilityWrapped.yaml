@@ -2,4 +2,4 @@ type: object
 required: [data]
 properties:
   data:
-    $ref: './Product.yaml'
+    $ref: './Availability.yaml'

@@ -5,7 +5,6 @@ info:
   version: 0.0.0
 servers:
   - url: https://bilberry.test/api/v0
-  - url: https://bilberry-v3-staging-sxren.ondigitalocean.app/api/v0
 paths:
   /products:
     get:
@@ -44,7 +43,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductWrapped'
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
   /product/{product}:
     get:
       description: Returns a single product based on its ID
@@ -58,7 +62,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductWrapped'
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
         '404':
           $ref: '#/components/responses/404NotFound'
     patch:
@@ -80,56 +89,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductWrapped'
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Product'
     delete:
-      description: Cancel a specific product based on its ID
+      description: Soft-delete a specific product based on its ID
       tags:
         - Products API
       parameters:
         - $ref: '#/components/parameters/ProductId'
       responses:
         '200':
-          description: Successfully cancelled the product on the server
-  /availabilities:
-    get:
-      description: Returns a single product based on its ID
-      tags:
-        - Availabilities API
-      parameters:
-        - name: from
-          description: TODO
-          in: query
-          required: true
-          schema:
-            type: string
-            format: date-time
-        - name: to
-          description: TODO
-          in: query
-          required: true
-          schema:
-            type: string
-            format: date-time
-        - name: products
-          description: TODO
-          in: query
-          required: true
-          schema:
-            type: array
-            items:
-              type: integer
-      responses:
-        '200':
-          description: Successfully retrieved the product from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Availability'
+          description: Successfully soft-deleted the product on the server
   /bookings:
     get:
       description: Returns paginated list of bookings
@@ -278,9 +252,105 @@ paths:
                   links:
                     $ref: '#/components/schemas/Links'
   /users: {}
-  /instances: {}
   /resources: {}
-  /vat-models: {}
+  /vat-models:
+    get:
+      description: Returns paginated list of vat models
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Successfully retrieved vat models from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VatModel'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new vat model
+      tags:
+        - VAT API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VatModel'
+      responses:
+        '201':
+          description: Successfully created new vat model on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+  /vat-models/{vat}:
+    get:
+      description: Returns a single vat model based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      responses:
+        '200':
+          description: Successfully retrieved the vat model from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific vat model based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the vat model on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+    delete:
+      description: Soft-delete a specific vat model based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      responses:
+        '200':
+          description: Successfully deleted the vat model on the server
   /reports: {}
   /staff: {}
 components:
@@ -325,24 +395,96 @@ components:
         type: integer
         minimum: 0
       example: '100427'
+    VatModelId:
+      name: vat
+      in: path
+      required: true
+      description: The vat model ID
+      schema:
+        type: integer
+        minimum: 0
   schemas:
     ID:
       type: integer
       minimum: 1
       readOnly: true
-    WidgetInfo:
-      type: object
-      properties: {}
-    AccessStatus:
-      type: string
-      enum:
-        - public
-        - private
-        - api-only
     CreatedAt:
       type: string
       format: date-time
       readOnly: true
+    WidgetInfoNonTranslatable:
+      type: object
+      required:
+        - minAge
+        - minPriceMinor
+        - duration
+        - meetupTime
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        minAge:
+          type: integer
+        minPriceMinor:
+          type: integer
+        duration:
+          type: integer
+        meetupTime:
+          type: string
+          format: time
+    WidgetInfoTranslatable:
+      type: object
+      additionalProperties:
+        type: object
+        required:
+          - title
+          - shortDescription
+          - longDescription
+          - termsAndConditions
+          - url
+          - additionalInfo
+        properties:
+          title:
+            type: string
+          shortDescription:
+            type: string
+          longDescription:
+            type: string
+          termsAndConditions:
+            type: string
+          url:
+            type: string
+            format: url
+          additionalInfo:
+            type: string
+      example:
+        en:
+          title: Go Climbing
+          shortDescription: Climb up some trees
+          longDescription: Climb up some trees for 3 hours at our awesome park
+          additionalInfo: Not for people with fear of heights
+          termsAndConditions: tldr
+          url: https://awesome.climbing.no/en/3-hour-tree-climbing
+        'no':
+          title: Gå på klatring
+          shortDescription: Klatre opp noen trær
+          longDescription: Klatre opp noen trær i 3 timer i vår fantastiske park
+          additionalInfo: Ikke for personer med høydeskrekk
+          termsAndConditions: tldr
+          url: https://awesome.climbing.no/no/3-hour-tree-climbing
+    WidgetInfo:
+      allOf:
+        - $ref: '#/components/schemas/WidgetInfoNonTranslatable'
+        - type: object
+          properties:
+            translatable:
+              $ref: '#/components/schemas/WidgetInfoTranslatable'
+    ProductStatus:
+      type: string
+      enum:
+        - DRAFT
+        - PUBLISHED
     ResourceShort:
       type: object
       required:
@@ -356,13 +498,13 @@ components:
     CapacityMode:
       type: string
       enum:
-        - fully-shared
-        - single-instance
-        - single-ticket-option
-        - single-bookable
-        - single-booking
-        - single-ticket
-        - single-product
+        - FULLY_SHARED
+        - SINGLE_INSTANCE
+        - SINGLE_TICKET_OPTION
+        - SINGLE_BOOKABLE
+        - SINGLE_BOOKING
+        - SINGLE_TICKET
+        - SINGLE_PRODUCT
     ResourceRequirement:
       type: object
       required:
@@ -373,6 +515,10 @@ components:
         - startOffset
         - endOffset
       properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
         resource:
           $ref: '#/components/schemas/ResourceShort'
         capacityReduction:
@@ -389,185 +535,101 @@ components:
           type: integer
           default: 1
           minimum: 1
-        createdAt:
-          $ref: '#/components/schemas/CreatedAt'
-    PriceType:
-      type: string
-      enum:
-        - standard
-        - graduated
-        - volume
-    MinorAmount:
-      type: integer
-      minimum: 0
-    StandardPrice:
-      type: object
-      required:
-        - type
-        - priceMinor
-      properties:
-        type:
-          $ref: '#/components/schemas/PriceType'
-        rules:
-          type: object
-          required:
-            - priceMinor
-          properties:
-            priceMinor:
-              $ref: '#/components/schemas/MinorAmount'
-    ComplexPrice:
-      type: object
-      required:
-        - id
-        - type
-        - rules
-      properties:
-        id:
-          $ref: '#/components/schemas/ID'
-        type:
-          $ref: '#/components/schemas/PriceType'
-        rules:
-          type: array
-          items:
-            type: object
-            required:
-              - priceMinor
-              - flatFeeMinor
-              - rangeFrom
-            properties:
-              priceMinor:
-                $ref: '#/components/schemas/MinorAmount'
-              flatFeeMinor:
-                $ref: '#/components/schemas/MinorAmount'
-              rangeFrom:
-                type: integer
-                minimum: 1
-    ValidFrom:
-      type: string
-      format: date-time
-      description: Future date
-    Price:
-      allOf:
-        - oneOf:
-            - $ref: '#/components/schemas/StandardPrice'
-            - $ref: '#/components/schemas/ComplexPrice'
-          discriminator:
-            propertyName: type
-            mapping:
-              standard: '#/components/schemas/StandardPrice'
-              graduated: '#/components/schemas/ComplexPrice'
-              volume: '#/components/schemas/ComplexPrice'
-        - type: object
-          required:
-            - id
-            - additionalRules
-            - createdAt
-            - validFrom
-          properties:
-            id:
-              $ref: '#/components/schemas/ID'
-            additionalRules:
-              type: array
-              items:
-                type: object
-            createdAt:
-              $ref: '#/components/schemas/CreatedAt'
-            validFrom:
-              $ref: '#/components/schemas/ValidFrom'
     IDwritable:
       type: integer
       minimum: 1
-    VatModelShort:
-      type: object
-      required:
-        - id
-        - createdAt
-        - validFrom
-      properties:
-        id:
-          $ref: '#/components/schemas/IDwritable'
-        createdAt:
-          $ref: '#/components/schemas/CreatedAt'
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
-    CancellationPolicyShort:
-      type: object
-      required:
-        - id
-        - createdAt
-      properties:
-        id:
-          $ref: '#/components/schemas/IDwritable'
-        createdAt:
-          $ref: '#/components/schemas/CreatedAt'
-        validFrom:
-          $ref: '#/components/schemas/ValidFrom'
     TicketOption:
       type: object
       required:
         - name
-        - minimumAge
-        - maximumAge
+        - minAge
+        - maxAge
         - resourceRequirements
-        - prices
-        - vatModels
-        - cancellationPolicies
       properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
         name:
           type: string
-        minimumAge:
+        minAge:
           type: integer
-        maximumAge:
+          nullable: true
+        maxAge:
           type: integer
+          nullable: true
         resourceRequirements:
           type: array
           items:
             $ref: '#/components/schemas/ResourceRequirement'
-        prices:
-          type: array
-          items:
-            $ref: '#/components/schemas/Price'
-        vatModels:
-          type: array
-          items:
-            $ref: '#/components/schemas/VatModelShort'
-        cancellationPolicies:
-          type: array
-          items:
-            $ref: '#/components/schemas/CancellationPolicyShort'
-    StaffRequirement:
+        vatModelId:
+          $ref: '#/components/schemas/IDwritable'
+    CancellationPolicy:
       type: object
-      properties: {}
-    Location:
-      type: object
-      properties: {}
-    Product:
+      required: []
+      properties:
+        cancellationTime:
+          type: integer
+          description: time in minutes how long before (positive) or after (negative) the start of a tour it is cancellable for a full refund
+    Address:
       type: object
       required:
-        - name
-        - description
+        - address
+        - city
+        - postalCode
+        - country
+      properties:
+        address:
+          type: string
+        city:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+    GeographicPoint:
+      type: object
+      required:
+        - longitude
+        - latitude
+      properties:
+        longitude:
+          type: number
+        latitude:
+          type: number
+    Location:
+      allOf:
+        - $ref: '#/components/schemas/Address'
+        - $ref: '#/components/schemas/GeographicPoint'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ID'
+            createdAt:
+              $ref: '#/components/schemas/CreatedAt'
+    Product:
+      type: object
       properties:
         id:
           $ref: '#/components/schemas/ID'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
         name:
           type: string
         description:
           type: string
-        web:
+        widgetInfo:
           $ref: '#/components/schemas/WidgetInfo'
-        cutoff:
+        cutoffTime:
           type: integer
-        accessStatus:
-          $ref: '#/components/schemas/AccessStatus'
+        status:
+          $ref: '#/components/schemas/ProductStatus'
         ticketOptions:
           type: array
           items:
             $ref: '#/components/schemas/TicketOption'
-        termsAndConditions: {}
-        staffRequirements:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaffRequirement'
+        cancellationPolicy:
+          $ref: '#/components/schemas/CancellationPolicy'
         location:
           $ref: '#/components/schemas/Location'
     Links:
@@ -589,20 +651,13 @@ components:
           type: string
           format: url
           nullable: true
-    ProductWrapped:
-      type: object
-      required:
-        - data
-      properties:
-        data:
-          $ref: '#/components/schemas/Product'
     Op:
       type: string
       description: The operation to be carried out
     Path:
       type: string
       description: A path in the request object of the related POST request following modified JSON patch syntax
-      example: /my/path/12/asd
+      example: /my/paths/12/asd
     Value:
       description: The value used for the operation (any type)
     PatchObject:
@@ -636,29 +691,6 @@ components:
                     - remove
             path:
               $ref: '#/components/schemas/Path'
-    Availability:
-      type: object
-      required:
-        - productId
-        - ticketOptionId
-        - bookableId
-        - availability
-      properties:
-        productId:
-          type: integer
-        ticketOptionId:
-          type: integer
-        bookableId:
-          type: integer
-        availability:
-          type: integer
-          minimum: 0
-        start:
-          type: string
-          format: date-time
-        end:
-          type: string
-          format: date-time
     PhoneNumber:
       type: string
       format: phone
@@ -670,27 +702,44 @@ components:
       pattern: ^[0-7][0-9A-HJKMNP-TV-Z]{25}$
       readOnly: true
     BookingMetaInfo:
+      allOf:
+        - type: object
+          required:
+            - firstName
+            - lastName
+            - email
+            - phone
+          properties:
+            firstName:
+              type: string
+              nullable: true
+            lastName:
+              type: string
+              nullable: true
+            email:
+              type: string
+              format: email
+              nullable: true
+            phone:
+              allOf:
+                - $ref: '#/components/schemas/PhoneNumber'
+                - nullable: true
+        - $ref: '#/components/schemas/Address'
+    Ticket:
       type: object
       required:
-        - firstName
-        - lastName
-        - email
-        - phone
+        - id
+        - bookableId
+        - quantity
       properties:
-        firstName:
-          type: string
-          nullable: true
-        lastName:
-          type: string
-          nullable: true
-        email:
-          type: string
-          format: email
-          nullable: true
-        phone:
-          allOf:
-            - $ref: '#/components/schemas/PhoneNumber'
-            - nullable: true
+        id:
+          $ref: '#/components/schemas/ULID'
+        bookableId:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
     InvoiceShort:
       type: object
       required:
@@ -708,19 +757,28 @@ components:
       minLength: 3
       maxLength: 3
       example: NOK
+    Amount:
+      type: object
+      required:
+        - minorValue
+        - currencyCode
+      properties:
+        minorValue:
+          type: integer
+          minimum: 0
+        currencyCode:
+          $ref: '#/components/schemas/Currency'
     DepositInvoice:
       allOf:
         - $ref: '#/components/schemas/InvoiceShort'
         - type: object
           required:
             - amountMinor
-            - currency
+            - amount
             - creditedAt
           properties:
-            amountMinor:
-              $ref: '#/components/schemas/MinorAmount'
-            currency:
-              $ref: '#/components/schemas/Currency'
+            amount:
+              $ref: '#/components/schemas/Amount'
             creditedAt:
               type: string
               format: date-time
@@ -730,32 +788,29 @@ components:
       type: object
       required:
         - id
-        - currency
-        - amountMinor
+        - amount
         - createdAt
         - type
       properties:
         id:
           $ref: '#/components/schemas/ULID'
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          $ref: '#/components/schemas/MinorAmount'
+        amount:
+          $ref: '#/components/schemas/Amount'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         type:
           type: string
           enum:
-            - online
-            - checkout
+            - ONLINE
+            - CHECKOUT
+            - GIFTCAR
             - ...
     OnlinePayment:
       type: object
       required:
         - id
         - provider
-        - currency
-        - amountMinor
+        - amount
         - createdAt
         - status
         - statusAt
@@ -768,21 +823,19 @@ components:
         provider:
           type: string
           enum:
-            - nets
-            - stripe
-        currency:
-          $ref: '#/components/schemas/Currency'
-        amountMinor:
-          $ref: '#/components/schemas/MinorAmount'
+            - NETS
+            - STRIPE
+        amount:
+          $ref: '#/components/schemas/Amount'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         status:
           type: string
           enum:
-            - created
-            - timed-out
-            - completed
-            - cancelled
+            - CREATED
+            - TIMED_OUT
+            - COMPLETED
+            - CANCELLED
         statusAt:
           type: string
           format: date-time
@@ -817,20 +870,7 @@ components:
             tickets:
               type: array
               items:
-                type: object
-                required:
-                  - id
-                  - bookableId
-                  - quantity
-                properties:
-                  id:
-                    $ref: '#/components/schemas/ULID'
-                  bookableId:
-                    type: integer
-                  quantity:
-                    type: integer
-                    minimum: 1
-                    default: 1
+                $ref: '#/components/schemas/Ticket'
             invoice:
               allOf:
                 - $ref: '#/components/schemas/InvoiceShort'
@@ -876,21 +916,18 @@ components:
         - $ref: '#/components/schemas/BookingMetaInfo'
         - type: object
           required:
-            - currency
             - totalAmountGross
             - totalAmountNet
             - totalAmountVAT
             - items
             - creditedAt
           properties:
-            currency:
-              $ref: '#/components/schemas/Currency'
             totalAmountGross:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             totalAmountNet:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             totalAmountVAT:
-              type: integer
+              $ref: '#/components/schemas/Amount'
             items:
               type: array
               items:
@@ -899,11 +936,11 @@ components:
                   name:
                     type: string
                   amountNet:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   amountGross:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   amountVAT:
-                    type: integer
+                    $ref: '#/components/schemas/Amount'
                   quantity:
                     type: integer
             creditedAt:
@@ -971,6 +1008,93 @@ components:
             $ref: '#/components/schemas/Trigger'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
+    MinorPercentage:
+      type: integer
+      minimum: 0
+      maximum: 10000
+    VatCategory:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - code
+        - percentMinor
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        name:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        percentMinor:
+          $ref: '#/components/schemas/MinorPercentage'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+    MinorAmount:
+      type: integer
+      minimum: 0
+    VatRule:
+      type: object
+      required:
+        - default
+        - fixed
+        - percentage
+      properties:
+        default:
+          $ref: '#/components/schemas/VatCategory'
+        fixed:
+          type: array
+          items:
+            allOf:
+              - type: object
+                required:
+                  - amountMinor
+                  - description
+                properties:
+                  amountMinor:
+                    $ref: '#/components/schemas/MinorAmount'
+                  description:
+                    type: string
+              - $ref: '#/components/schemas/VatCategory'
+        percentage:
+          type: array
+          items:
+            allOf:
+              - type: object
+                required:
+                  - percentMinor
+                  - description
+                properties:
+                  percentMinor:
+                    $ref: '#/components/schemas/MinorPercentage'
+                  description:
+                    type: string
+              - $ref: '#/components/schemas/VatCategory'
+    ValidFrom:
+      type: string
+      format: date-time
+      description: Future date
+    VatModel:
+      type: object
+      required:
+        - id
+        - versions
+      properties:
+        id:
+          $ref: '#/components/schemas/ID'
+        versions:
+          type: array
+          items:
+            type: object
+            properties:
+              rules:
+                $ref: '#/components/schemas/VatRule'
+              validFrom:
+                $ref: '#/components/schemas/ValidFrom'
   responses:
     404NotFound:
       description: Not found error

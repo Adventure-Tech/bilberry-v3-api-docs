@@ -1,17 +1,19 @@
-type: object
-required: [firstName, lastName, email, phone]
-properties:
-  firstName:
-    type: string
-    nullable: true
-  lastName:
-    type: string
-    nullable: true
-  email:
-    type: string
-    format: email
-    nullable: true
-  phone:
-    allOf:
-      - $ref: '../types/PhoneNumber.yaml'
-      - nullable: true
+allOf:
+  - type: object
+    required: [firstName, lastName, email, phone]
+    properties:
+      firstName:
+        type: string
+        nullable: true
+      lastName:
+        type: string
+        nullable: true
+      email:
+        type: string
+        format: email
+        nullable: true
+      phone:
+        allOf:
+          - $ref: '../types/PhoneNumber.yaml'
+          - nullable: true
+  - $ref: '../types/Address.yaml' # TODO: nullability

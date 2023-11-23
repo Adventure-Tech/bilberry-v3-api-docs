@@ -1,14 +1,12 @@
 type: object
-required: [id, currency, amountMinor, createdAt, type]
+required: [id, amount, createdAt, type]
 properties:
   id:
     $ref: '../types/ULID.yaml'
-  currency:
-    $ref: '../types/Currency.yaml'
-  amountMinor:
-    $ref: '../types/MinorAmount.yaml'
+  amount:
+    $ref: '../types/Amount.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   type:
     type: string
-    enum: [online, checkout, ...]
+    enum: [ONLINE, CHECKOUT, GIFTCAR, ...]

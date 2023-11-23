@@ -1,0 +1,41 @@
+get:
+  description: Returns a single availability based on its ID
+  tags: [ Availabilities API ]
+  parameters:
+    - $ref: '../../parameters/path/AvailabilityId.yaml'
+  responses:
+    200:
+      description: Successfully retrieved the availability from the server
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/availabilities/AvailabilityWrapped.yaml'
+    404:
+      $ref: '../../responses/404NotFound.yaml'
+patch:
+  description: Patch a specific availability based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+  tags: [ Availabilities API ]
+  parameters:
+    - $ref: '../../parameters/path/AvailabilityId.yaml'
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: '../../schemas/jsonpatch/PatchObject.yaml'
+  responses:
+    200:
+      description: Successfully updated the availability on the server
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/availabilities/AvailabilityWrapped.yaml'
+delete:
+  description: Delete a specific availability based on its ID
+  tags: [ Availabilities API ]
+  parameters:
+    - $ref: '../../parameters/path/AvailabilityID.yaml'
+  responses:
+    200:
+      description: Successfully deleted the availability on the server

@@ -1,0 +1,55 @@
+get:
+  description: Returns paginated list of availabilities
+  tags: [ Availabilities API ]
+  parameters:
+    - name: from
+      description: TODO
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+    - name: to
+      description: TODO
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+    - name: products
+      description: TODO
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          type: integer
+  responses:
+    200:
+      description: Successfully retrieved the availabilities from the server
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../../schemas/availabilities/Availability.yaml'
+              links:
+                $ref: '../../schemas/pagination/Links.yaml'
+post:
+  description: Creates new availability
+  tags: [ Availabilities API ]
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/availabilities/Availability.yaml'
+  responses:
+    201:
+      description: Successfully created new availability on the server
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/availabilities/AvailabilityWrapped.yaml'

@@ -3,17 +3,14 @@ allOf:
   - $ref: './InvoiceShort.yaml'
   - $ref: '../bookings/BookingMetaInfo.yaml'
   - type: object
-    required: [currency, totalAmountGross, totalAmountNet, totalAmountVAT, items, creditedAt]
+    required: [totalAmountGross, totalAmountNet, totalAmountVAT, items, creditedAt]
     properties:
-      currency:
-        $ref: '../types/Currency.yaml'
-      # TODO: amount minor | string vs integer vs float
       totalAmountGross:
-        type: integer
+        $ref: '../types/Amount.yaml'
       totalAmountNet:
-        type: integer
+        $ref: '../types/Amount.yaml'
       totalAmountVAT:
-        type: integer
+        $ref: '../types/Amount.yaml'
       items:
         type: array
         items:
@@ -22,11 +19,11 @@ allOf:
             name:
               type: string
             amountNet:
-              type: integer
+              $ref: '../types/Amount.yaml'
             amountGross:
-              type: integer
+              $ref: '../types/Amount.yaml'
             amountVAT:
-              type: integer
+              $ref: '../types/Amount.yaml'
             quantity:
               type: integer
       creditedAt:

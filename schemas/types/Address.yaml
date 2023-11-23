@@ -1,0 +1,11 @@
+type: object
+required: [address, city, postalCode, country]
+properties:
+  address:
+    type: string
+  city:
+    type: string
+  postalCode:
+    type: string
+  country:
+    type: string

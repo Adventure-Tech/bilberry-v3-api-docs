@@ -1,28 +1,33 @@
 type: object
-required:
-  - name
-  - description
 properties:
   id:
     $ref: '../types/ID.yaml'
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'
   name:
     type: string
   description:
     type: string
-  web:
+  widgetInfo:
     $ref: './WidgetInfo.yaml'
-  cutoff:
+  cutoffTime:
     type: integer
-  accessStatus:
-    $ref: './AccessStatus.yaml'
+  status:
+    $ref: './ProductStatus.yaml'
   ticketOptions:
     type: array
     items:
       $ref: './TicketOption.yaml'
-  termsAndConditions: {}
-  staffRequirements:
-    type: array
-    items:
-      $ref: './StaffRequirement.yaml'
+  cancellationPolicy:
+    $ref: './CancellationPolicy.yaml'
+#  tags:
+#    type: array
+#    items:
+#      $ref: '../types/Tag.yaml'
+#  staffRequirements:
+#    type: array
+#    items:
+#      $ref: './StaffRequirement.yaml'
   location:
     $ref: './Location.yaml'
+#  discountPolicies: {}
