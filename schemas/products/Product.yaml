@@ -8,8 +8,6 @@ properties:
     type: string
   description:
     type: string
-  type:
-    $ref: './ProductType.yaml'
   widgetInfo:
     $ref: './WidgetInfo.yaml'
   cutoffTime:

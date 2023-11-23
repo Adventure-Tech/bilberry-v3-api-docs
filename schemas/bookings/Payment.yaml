@@ -9,4 +9,4 @@ properties:
     $ref: '../types/CreatedAt.yaml'
   type:
     type: string
-    enum: [online, checkout, ...]
+    enum: [ONLINE, CHECKOUT, GIFTCAR, ...]

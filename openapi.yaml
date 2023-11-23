@@ -13,24 +13,27 @@ servers:
 
 paths:
   /products:
-    $ref: './api/products/Products.yaml'
+    $ref: './endpoints/products/ProductsEndpoints.yaml'
   /product/{product}:
-    $ref: './api/products/Product.yaml'
-  /availabilities:
-    $ref: './api/availability/Availabilities.yaml'
-  /availabilities/{availability}:
-    $ref: './api/availability/Availability.yaml'
+    $ref: './endpoints/products/ProductEndpoints.yaml'
+#  /availabilities:
+#    $ref: './endpoints/availability/Availabilities.yaml'
+#  /availabilities/{availability}:
+#    $ref: './endpoints/availability/Availability.yaml'
   /bookings:
-    $ref: './api/bookings/Bookings.yaml'
+    $ref: './endpoints/bookings/BookingsEndpoints.yaml'
   /bookings/{booking}:
-    $ref: './api/bookings/Booking.yaml'
+    $ref: './endpoints/bookings/BookingEndpoints.yaml'
   /invoices/{invoice}:
-    $ref: './api/reporting/Invoice.yaml'
+    $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
   /notifications:
-    $ref: './api/notifications/Notifications.yaml'
+    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
 
   /users: {}
   /resources: {}
-  /vat-models: {}
+  /vat-models:
+    $ref: './endpoints/vat/VatsEndpoints.yaml'
+  /vat-models/{vat}:
+    $ref: './endpoints/vat/VatEndpoints.yaml'
   /reports: {}
   /staff: {}

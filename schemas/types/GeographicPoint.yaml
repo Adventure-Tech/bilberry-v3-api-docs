@@ -2,6 +2,6 @@ type: object
 required: [longitude, latitude]
 properties:
   longitude:
-    type: float
+    type: number
   latitude:
-    type: float
+    type: number

@@ -17,8 +17,5 @@ properties:
     type: array
     items:
       $ref: './ResourceRequirement.yaml'
-
-#  vatModels:
-#    type: array
-#    items:
-#      $ref: '../prices/VatModelShort.yaml'
+  vatModelId:
+    $ref: '../types/IDwritable.yaml'

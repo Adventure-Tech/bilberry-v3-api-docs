@@ -8,14 +8,14 @@ properties:
     format: uuid
   provider:
     type: string
-    enum: [nets, stripe]
+    enum: [NETS, STRIPE]
   amount:
     $ref: '../types/Amount.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   status:
     type: string
-    enum: [created, timed-out, completed, cancelled]
+    enum: [CREATED, TIMED_OUT, COMPLETED, CANCELLED]
   statusAt:
     type: string
     format: date-time

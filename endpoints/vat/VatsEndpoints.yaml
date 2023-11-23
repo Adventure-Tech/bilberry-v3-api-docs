@@ -1,12 +1,12 @@
 get:
-  description: Returns paginated list of products
-  tags: [ Products API ]
+  description: Returns paginated list of vat models
+  tags: [ VAT API ]
   parameters:
     - $ref: '../../parameters/query/PageCursor.yaml'
     - $ref: '../../parameters/query/PerPage.yaml'
   responses:
     200:
-      description: Successfully retrieved products from the server
+      description: Successfully retrieved vat models from the server
       content:
         application/json:
           schema:
@@ -15,21 +15,25 @@ get:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/products/Product.yaml'
+                  $ref: '../../schemas/vat/VatModel.yaml'
               links:
                 $ref: '../../schemas/pagination/Links.yaml'
 post:
-  description: Creates new product
-  tags: [ Products API ]
+  description: Creates new vat model
+  tags: [ VAT API ]
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/products/Product.yaml'
+          $ref: '../../schemas/vat/VatModel.yaml'
   responses:
     201:
-      description: Successfully created new product on the server
+      description: Successfully created new vat model on the server
       content:
         application/json:
           schema:
-            $ref: '../../schemas/products/ProductWrapped.yaml'
+            type: object
+            required: [ data ]
+            properties:
+              data:
+                $ref: '../../schemas/vat/VatModel.yaml'

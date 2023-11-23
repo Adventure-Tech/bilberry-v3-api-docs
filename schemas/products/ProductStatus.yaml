@@ -1,2 +1,4 @@
 type: string
-enum: [draft, published]
+enum:
+  - DRAFT
+  - PUBLISHED
