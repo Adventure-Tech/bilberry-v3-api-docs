@@ -21,15 +21,15 @@ properties:
     items:
       $ref: './TicketOption.yaml'
   cancellationPolicy:
-    $ref: './CancellationPolicyShort.yaml'
-  tags:
-    type: array
-    items:
-      $ref: '../types/Tag.yaml'
+    $ref: './CancellationPolicy.yaml'
+#  tags:
+#    type: array
+#    items:
+#      $ref: '../types/Tag.yaml'
 #  staffRequirements:
 #    type: array
 #    items:
 #      $ref: './StaffRequirement.yaml'
   location:
     $ref: './Location.yaml'
-  discountPolicies: {}
+#  discountPolicies: {}
