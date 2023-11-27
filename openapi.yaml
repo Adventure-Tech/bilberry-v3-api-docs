@@ -33,7 +33,7 @@ paths:
   /resources: {}
   /vat-models:
     $ref: './endpoints/vat/VatsEndpoints.yaml'
-  /vat-models/{vat}:
+  /vat-models/{vat-model}:
     $ref: './endpoints/vat/VatEndpoints.yaml'
   /reports: {}
   /staff: {}

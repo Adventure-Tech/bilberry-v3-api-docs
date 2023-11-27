@@ -1,4 +1,4 @@
-name: vat
+name: vat-model
 in: path
 required: true
 description: The vat model ID
