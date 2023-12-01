@@ -116,9 +116,9 @@ paths:
         - name: timeslot
           description: TODO
           in: query
+          default: false
           schema:
             type: boolean
-            default: false
       responses:
         '200':
           description: Successfully retrieved the bookables from the server
