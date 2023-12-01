@@ -12,28 +12,38 @@ servers:
 #  - BasicAuth: []
 
 paths:
+  # Products API
   /products:
     $ref: './endpoints/products/ProductsEndpoints.yaml'
   /product/{product}:
     $ref: './endpoints/products/ProductEndpoints.yaml'
-#  /availabilities:
-#    $ref: './endpoints/availability/Availabilities.yaml'
-#  /availabilities/{availability}:
-#    $ref: './endpoints/availability/Availability.yaml'
-  /bookings:
-    $ref: './endpoints/bookings/BookingsEndpoints.yaml'
-  /bookings/{booking}:
-    $ref: './endpoints/bookings/BookingEndpoints.yaml'
-  /invoices/{invoice}:
-    $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
-  /notifications:
-    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
+  /product/{product}/bookables:
+    $ref: './endpoints/products/BookablesEndpoints.yaml'
+  /product/{product}/availability:
+    $ref: './endpoints/products/AvailabilityEndpoints.yaml'
 
-  /users: {}
-  /resources: {}
+  # VAT API
   /vat-models:
     $ref: './endpoints/vat/VatsEndpoints.yaml'
   /vat-models/{vat-model}:
     $ref: './endpoints/vat/VatEndpoints.yaml'
+
+  # Bookings API
+  /bookings:
+    $ref: './endpoints/bookings/BookingsEndpoints.yaml'
+  /bookings/{booking}:
+    $ref: './endpoints/bookings/BookingEndpoints.yaml'
+
+  # Reporting API
+  /invoices/{invoice}:
+    $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
+
+#  /notifications:
+
+#    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
+
+  /users: {}
+  /resources: {}
+
   /reports: {}
   /staff: {}

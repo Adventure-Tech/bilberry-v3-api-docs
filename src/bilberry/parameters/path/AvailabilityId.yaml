@@ -1,7 +1,0 @@
-name: availability
-in: path
-required: true
-description: The availability ID
-schema:
-  type: integer
-  minimum: 0

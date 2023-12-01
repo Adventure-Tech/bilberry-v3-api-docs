@@ -1,5 +1,4 @@
 type: object
-required: []
 properties:
   cancellationTime:
     type: integer
@@ -8,7 +7,7 @@ properties:
 #required: [id, createdAt]
 #properties:
 #  id:
-#    $ref: '../types/IDwritable.yaml'
+#    $ref: '../types/IdWritable.yaml'
 #  createdAt:
 #    $ref: '../types/CreatedAt.yaml'
 #  validFrom:

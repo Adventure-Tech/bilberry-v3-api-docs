@@ -104,6 +104,177 @@ paths:
       responses:
         '200':
           description: Successfully soft-deleted the product on the server
+  /product/{product}/bookables:
+    get:
+      description: Returns list of bookables
+      tags:
+        - Products API
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+        - $ref: '#/components/parameters/From'
+        - $ref: '#/components/parameters/To'
+        - name: timeslot
+          description: TODO
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Successfully retrieved the bookables from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bookable'
+    put:
+      description: Creates new bookables
+      tags:
+        - Products API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Bookable'
+      responses:
+        '201':
+          description: Successfully created new bookables on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Bookable'
+  /product/{product}/availability:
+    get:
+      description: Returns availability of the given product
+      tags:
+        - Products API
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+        - $ref: '#/components/parameters/From'
+        - $ref: '#/components/parameters/To'
+      responses:
+        '200':
+          description: Successfully retrieved the availability from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Availability'
+  /vat-models:
+    get:
+      description: Returns paginated list of vat models
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Successfully retrieved vat models from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VatModel'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new vat model
+      tags:
+        - VAT API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VatModel'
+      responses:
+        '201':
+          description: Successfully created new vat model on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+  /vat-models/{vat-model}:
+    get:
+      description: Returns a single vat model based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      responses:
+        '200':
+          description: Successfully retrieved the vat model from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific vat model based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the vat model on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatModel'
+    delete:
+      description: Soft-delete a specific vat model based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatModelId'
+      responses:
+        '200':
+          description: Successfully deleted the vat model on the server
   /bookings:
     get:
       description: Returns paginated list of bookings
@@ -229,128 +400,8 @@ paths:
                 $ref: '#/components/schemas/InvoiceWrapped'
         '404':
           $ref: '#/components/responses/404NotFound'
-  /notifications:
-    get:
-      description: Returns paginated list of notifications
-      tags:
-        - Notifications API
-      parameters:
-        - $ref: '#/components/parameters/PageCursor'
-        - $ref: '#/components/parameters/PerPage'
-      responses:
-        '200':
-          description: Successfully retrieved notifications from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Notification'
-                  links:
-                    $ref: '#/components/schemas/Links'
   /users: {}
   /resources: {}
-  /vat-models:
-    get:
-      description: Returns paginated list of vat models
-      tags:
-        - VAT API
-      parameters:
-        - $ref: '#/components/parameters/PageCursor'
-        - $ref: '#/components/parameters/PerPage'
-      responses:
-        '200':
-          description: Successfully retrieved vat models from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/VatModel'
-                  links:
-                    $ref: '#/components/schemas/Links'
-    post:
-      description: Creates new vat model
-      tags:
-        - VAT API
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VatModel'
-      responses:
-        '201':
-          description: Successfully created new vat model on the server
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - data
-                properties:
-                  data:
-                    $ref: '#/components/schemas/VatModel'
-  /vat-models/{vat}:
-    get:
-      description: Returns a single vat model based on its ID
-      tags:
-        - VAT API
-      parameters:
-        - $ref: '#/components/parameters/VatModelId'
-      responses:
-        '200':
-          description: Successfully retrieved the vat model from the server
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - data
-                properties:
-                  data:
-                    $ref: '#/components/schemas/VatModel'
-        '404':
-          $ref: '#/components/responses/404NotFound'
-    patch:
-      description: Patch a specific vat model based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
-      tags:
-        - VAT API
-      parameters:
-        - $ref: '#/components/parameters/VatModelId'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/PatchObject'
-      responses:
-        '200':
-          description: Successfully updated the vat model on the server
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - data
-                properties:
-                  data:
-                    $ref: '#/components/schemas/VatModel'
-    delete:
-      description: Soft-delete a specific vat model based on its ID
-      tags:
-        - VAT API
-      parameters:
-        - $ref: '#/components/parameters/VatModelId'
-      responses:
-        '200':
-          description: Successfully deleted the vat model on the server
   /reports: {}
   /staff: {}
 components:
@@ -378,6 +429,30 @@ components:
       schema:
         type: integer
         minimum: 0
+    From:
+      name: from
+      description: TODO
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+    To:
+      name: to
+      description: TODO
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+    VatModelId:
+      name: vat-model
+      in: path
+      required: true
+      description: The vat model ID
+      schema:
+        type: integer
+        minimum: 0
     BookingId:
       name: booking
       in: path
@@ -395,16 +470,8 @@ components:
         type: integer
         minimum: 0
       example: '100427'
-    VatModelId:
-      name: vat
-      in: path
-      required: true
-      description: The vat model ID
-      schema:
-        type: integer
-        minimum: 0
   schemas:
-    ID:
+    Id:
       type: integer
       minimum: 1
       readOnly: true
@@ -421,7 +488,7 @@ components:
         - meetupTime
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         minAge:
@@ -492,7 +559,7 @@ components:
         - createdAt
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     CapacityMode:
@@ -516,7 +583,7 @@ components:
         - endOffset
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         resource:
@@ -535,7 +602,7 @@ components:
           type: integer
           default: 1
           minimum: 1
-    IDwritable:
+    IdWritable:
       type: integer
       minimum: 1
     TicketOption:
@@ -547,7 +614,7 @@ components:
         - resourceRequirements
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         name:
@@ -563,10 +630,9 @@ components:
           items:
             $ref: '#/components/schemas/ResourceRequirement'
         vatModelId:
-          $ref: '#/components/schemas/IDwritable'
+          $ref: '#/components/schemas/IdWritable'
     CancellationPolicy:
       type: object
-      required: []
       properties:
         cancellationTime:
           type: integer
@@ -604,14 +670,14 @@ components:
         - type: object
           properties:
             id:
-              $ref: '#/components/schemas/ID'
+              $ref: '#/components/schemas/Id'
             createdAt:
               $ref: '#/components/schemas/CreatedAt'
     Product:
       type: object
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
         name:
@@ -691,6 +757,200 @@ components:
                     - remove
             path:
               $ref: '#/components/schemas/Path'
+    PriceType:
+      type: string
+      enum:
+        - STANDARD
+        - GRADUATED
+        - VOLUME
+    MinorAmount:
+      type: integer
+      minimum: 0
+    StandardPrice:
+      type: object
+      required:
+        - type
+        - priceMinor
+      properties:
+        type:
+          $ref: '#/components/schemas/PriceType'
+        rules:
+          type: object
+          required:
+            - priceMinor
+          properties:
+            priceMinor:
+              $ref: '#/components/schemas/MinorAmount'
+    ComplexPrice:
+      type: object
+      required:
+        - id
+        - type
+        - rules
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        type:
+          $ref: '#/components/schemas/PriceType'
+        rules:
+          type: array
+          items:
+            type: object
+            required:
+              - priceMinor
+              - flatFeeMinor
+              - rangeFrom
+            properties:
+              priceMinor:
+                $ref: '#/components/schemas/MinorAmount'
+              flatFeeMinor:
+                $ref: '#/components/schemas/MinorAmount'
+              rangeFrom:
+                type: integer
+                minimum: 1
+    Price:
+      allOf:
+        - oneOf:
+            - $ref: '#/components/schemas/StandardPrice'
+            - $ref: '#/components/schemas/ComplexPrice'
+          discriminator:
+            propertyName: type
+            mapping:
+              standard: '#/components/schemas/StandardPrice'
+              graduated: '#/components/schemas/ComplexPrice'
+              volume: '#/components/schemas/ComplexPrice'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/Id'
+            createdAt:
+              $ref: '#/components/schemas/CreatedAt'
+    Bookable:
+      type: object
+      properties:
+        ticketOptionId:
+          $ref: '#/components/schemas/IdWritable'
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        price:
+          $ref: '#/components/schemas/Price'
+        maxCapacity:
+          type: integer
+          minimum: 0
+          nullable: true
+        timeslots:
+          type: object
+          properties:
+            duration:
+              type: integer
+              minimum: 0
+            interval:
+              type: integer
+              minimum: 0
+    Availability:
+      type: object
+      properties:
+        bookableId:
+          $ref: '#/components/schemas/Id'
+        ticketOptionId:
+          $ref: '#/components/schemas/Id'
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        availability:
+          type: integer
+          minimum: 0
+    MinorPercentage:
+      type: integer
+      minimum: 0
+      maximum: 10000
+    VatCategory:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - code
+        - percentMinor
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        description:
+          type: string
+        code:
+          type: string
+        percentMinor:
+          $ref: '#/components/schemas/MinorPercentage'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+    VatRule:
+      type: object
+      required:
+        - default
+        - fixed
+        - percentage
+      properties:
+        default:
+          $ref: '#/components/schemas/VatCategory'
+        fixed:
+          type: array
+          items:
+            allOf:
+              - type: object
+                required:
+                  - amountMinor
+                  - description
+                properties:
+                  amountMinor:
+                    $ref: '#/components/schemas/MinorAmount'
+                  description:
+                    type: string
+              - $ref: '#/components/schemas/VatCategory'
+        percentage:
+          type: array
+          items:
+            allOf:
+              - type: object
+                required:
+                  - percentMinor
+                  - description
+                properties:
+                  percentMinor:
+                    $ref: '#/components/schemas/MinorPercentage'
+                  description:
+                    type: string
+              - $ref: '#/components/schemas/VatCategory'
+    ValidFrom:
+      type: string
+      format: date-time
+      description: Future date
+    VatModel:
+      type: object
+      required:
+        - id
+        - versions
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        versions:
+          type: array
+          items:
+            type: object
+            properties:
+              rules:
+                $ref: '#/components/schemas/VatRule'
+              validFrom:
+                $ref: '#/components/schemas/ValidFrom'
     PhoneNumber:
       type: string
       format: phone
@@ -748,7 +1008,7 @@ components:
       nullable: true
       properties:
         id:
-          $ref: '#/components/schemas/ID'
+          $ref: '#/components/schemas/Id'
         createdAt:
           $ref: '#/components/schemas/CreatedAt'
     Currency:
@@ -954,147 +1214,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Invoice'
-    Condition:
-      type: object
-      required:
-        - description
-        - type
-        - rules
-      properties:
-        description:
-          type: string
-        type:
-          type: string
-        rules:
-          type: object
-          properties:
-            value:
-              type: integer
-            operator:
-              type: string
-    Trigger:
-      type: object
-      required:
-        - eventType
-        - conditions
-      properties:
-        eventType:
-          type: string
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Condition'
-    Notification:
-      type: object
-      required:
-        - id
-        - name
-        - description
-        - active
-        - triggers
-        - createdAt
-      properties:
-        id:
-          $ref: '#/components/schemas/ID'
-        name:
-          type: string
-        description:
-          type: string
-        active:
-          type: boolean
-        triggers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Trigger'
-        createdAt:
-          $ref: '#/components/schemas/CreatedAt'
-    MinorPercentage:
-      type: integer
-      minimum: 0
-      maximum: 10000
-    VatCategory:
-      type: object
-      required:
-        - id
-        - name
-        - description
-        - code
-        - percentMinor
-        - createdAt
-      properties:
-        id:
-          $ref: '#/components/schemas/ID'
-        name:
-          type: string
-        description:
-          type: string
-        code:
-          type: string
-        percentMinor:
-          $ref: '#/components/schemas/MinorPercentage'
-        createdAt:
-          $ref: '#/components/schemas/CreatedAt'
-    MinorAmount:
-      type: integer
-      minimum: 0
-    VatRule:
-      type: object
-      required:
-        - default
-        - fixed
-        - percentage
-      properties:
-        default:
-          $ref: '#/components/schemas/VatCategory'
-        fixed:
-          type: array
-          items:
-            allOf:
-              - type: object
-                required:
-                  - amountMinor
-                  - description
-                properties:
-                  amountMinor:
-                    $ref: '#/components/schemas/MinorAmount'
-                  description:
-                    type: string
-              - $ref: '#/components/schemas/VatCategory'
-        percentage:
-          type: array
-          items:
-            allOf:
-              - type: object
-                required:
-                  - percentMinor
-                  - description
-                properties:
-                  percentMinor:
-                    $ref: '#/components/schemas/MinorPercentage'
-                  description:
-                    type: string
-              - $ref: '#/components/schemas/VatCategory'
-    ValidFrom:
-      type: string
-      format: date-time
-      description: Future date
-    VatModel:
-      type: object
-      required:
-        - id
-        - versions
-      properties:
-        id:
-          $ref: '#/components/schemas/ID'
-        versions:
-          type: array
-          items:
-            type: object
-            properties:
-              rules:
-                $ref: '#/components/schemas/VatRule'
-              validFrom:
-                $ref: '#/components/schemas/ValidFrom'
   responses:
     404NotFound:
       description: Not found error

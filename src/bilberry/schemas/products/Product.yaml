@@ -1,7 +1,7 @@
 type: object
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/Id.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   name:

@@ -2,7 +2,7 @@ type: object
 required: [id, type, rules]
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/Id.yaml'
   type:
     $ref: './PriceType.yaml'
   rules:

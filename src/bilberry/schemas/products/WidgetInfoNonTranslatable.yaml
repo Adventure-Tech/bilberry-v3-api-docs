@@ -2,7 +2,7 @@ type: object
 required: [ minAge, minPriceMinor, duration, meetupTime ]
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/Id.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   minAge:

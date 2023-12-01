@@ -2,7 +2,7 @@ type: object
 required: [name, minAge, maxAge, resourceRequirements]
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/Id.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   name:
@@ -18,4 +18,4 @@ properties:
     items:
       $ref: './ResourceRequirement.yaml'
   vatModelId:
-    $ref: '../types/IDwritable.yaml'
+    $ref: '../types/IdWritable.yaml'

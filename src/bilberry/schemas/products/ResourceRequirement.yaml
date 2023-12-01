@@ -2,7 +2,7 @@ type: object
 required: [resource, capacity reduction, mode, createdAt, startOffset, endOffset]
 properties:
   id:
-    $ref: '../types/ID.yaml'
+    $ref: '../types/Id.yaml'
   createdAt:
     $ref: '../types/CreatedAt.yaml'
   resource:
