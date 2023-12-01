@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    $ref: '../types/Id.yaml'
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'
+  name:
+    type: string
+  description:
+    type: string
+  widgetInfo:
+    $ref: './WidgetInfo.yaml'
+  cutoffTime:
+    type: integer
+  status:
+    $ref: './ProductStatus.yaml'
+  ticketOptions:
+    type: array
+    items:
+      $ref: './TicketOption.yaml'
+  cancellationPolicy:
+    $ref: './CancellationPolicy.yaml'
+#  tags:
+#    type: array
+#    items:
+#      $ref: '../types/Tag.yaml'
+#  staffRequirements:
+#    type: array
+#    items:
+#      $ref: './StaffRequirement.yaml'
+  location:
+    $ref: './Location.yaml'
+#  discountPolicies: {}

@@ -17,12 +17,12 @@ jobs:
         with:
           node-version: 18
       - name: Bundle specs
-        run: npx @redocly/cli bundle openapi.yaml -o dist/openapi.yaml --ext yaml
+        run: npx @redocly/cli bundle src/bilberry/openapi.yaml -o dist/bilberry-api.yaml --ext yaml
       - name: Commit files
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add ./dist/openapi.yaml
+          git add ./dist
           git commit -a -m "automatically bundle open api spec"
       - name: Push changes
         uses: ad-m/github-push-action@master

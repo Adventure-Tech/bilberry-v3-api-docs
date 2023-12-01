@@ -1,0 +1,49 @@
+openapi: 3.0.3
+
+info:
+  title: Bilberry v3 API
+  description: The public and internal API of Bilberry v3
+  version: 0.0.0
+
+servers:
+  - url: 'https://bilberry.test/api/v0'
+
+#security:
+#  - BasicAuth: []
+
+paths:
+  # Products API
+  /products:
+    $ref: './endpoints/products/ProductsEndpoints.yaml'
+  /product/{product}:
+    $ref: './endpoints/products/ProductEndpoints.yaml'
+  /product/{product}/bookables:
+    $ref: './endpoints/products/BookablesEndpoints.yaml'
+  /product/{product}/availability:
+    $ref: './endpoints/products/AvailabilityEndpoints.yaml'
+
+  # VAT API
+  /vat-models:
+    $ref: './endpoints/vat/VatsEndpoints.yaml'
+  /vat-models/{vat-model}:
+    $ref: './endpoints/vat/VatEndpoints.yaml'
+
+  # Bookings API
+  /bookings:
+    $ref: './endpoints/bookings/BookingsEndpoints.yaml'
+  /bookings/{booking}:
+    $ref: './endpoints/bookings/BookingEndpoints.yaml'
+
+  # Reporting API
+  /invoices/{invoice}:
+    $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
+
+#  /notifications:
+
+#    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
+
+  /users: {}
+  /resources: {}
+
+  /reports: {}
+  /staff: {}

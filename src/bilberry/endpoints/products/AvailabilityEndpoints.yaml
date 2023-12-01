@@ -1,0 +1,20 @@
+get:
+  description: Returns availability of the given product
+  tags: [ Products API ]
+  parameters:
+    - $ref: '../../parameters/path/ProductId.yaml'
+    - $ref: '../../parameters/query/From.yaml'
+    - $ref: '../../parameters/query/To.yaml'
+  responses:
+    200:
+      description: Successfully retrieved the availability from the server
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '../../schemas/availability/Availability.yaml'
+#

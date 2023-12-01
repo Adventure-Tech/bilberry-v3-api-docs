@@ -1,0 +1,21 @@
+type: object
+required: [name, minAge, maxAge, resourceRequirements]
+properties:
+  id:
+    $ref: '../types/Id.yaml'
+  createdAt:
+    $ref: '../types/CreatedAt.yaml'
+  name:
+    type: string
+  minAge:
+    type: integer
+    nullable: true
+  maxAge:
+    type: integer
+    nullable: true
+  resourceRequirements:
+    type: array
+    items:
+      $ref: './ResourceRequirement.yaml'
+  vatModelId:
+    $ref: '../types/IdWritable.yaml'
