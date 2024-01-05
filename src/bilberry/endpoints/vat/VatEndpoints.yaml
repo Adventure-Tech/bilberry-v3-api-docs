@@ -3,6 +3,7 @@ get:
   tags: [ VAT API ]
   parameters:
     - $ref: '../../parameters/path/VatModelId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved the vat model from the server
@@ -21,6 +22,7 @@ patch:
   tags: [ VAT API ]
   parameters:
     - $ref: '../../parameters/path/VatModelId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:
@@ -44,6 +46,7 @@ delete:
   tags: [ VAT API ]
   parameters:
     - $ref: '../../parameters/path/VatModelId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully deleted the vat model on the server

@@ -4,6 +4,7 @@ get:
   parameters:
     - $ref: '../../parameters/query/PageCursor.yaml'
     - $ref: '../../parameters/query/PerPage.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved products from the server
@@ -21,6 +22,8 @@ get:
 post:
   description: Creates new product
   tags: [ Products API ]
+  parameters:
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:

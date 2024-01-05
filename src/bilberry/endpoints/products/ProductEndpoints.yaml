@@ -3,6 +3,7 @@ get:
   tags: [ Products API ]
   parameters:
     - $ref: '../../parameters/path/ProductId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved the product from the server
@@ -21,6 +22,7 @@ patch:
   tags: [ Products API ]
   parameters:
     - $ref: '../../parameters/path/ProductId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:
@@ -44,6 +46,7 @@ delete:
   tags: [ Products API ]
   parameters:
     - $ref: '../../parameters/path/ProductId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully soft-deleted the product on the server

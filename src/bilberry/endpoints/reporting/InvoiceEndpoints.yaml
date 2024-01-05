@@ -2,6 +2,7 @@ get:
   description: Returns a single invoice based on its reference
   parameters:
     - $ref: '../../parameters/path/InvoiceRef.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   tags: [Reporting API]
   responses:
     200:

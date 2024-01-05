@@ -5,6 +5,7 @@ get:
     - $ref: '../../parameters/path/ProductId.yaml'
     - $ref: '../../parameters/query/From.yaml'
     - $ref: '../../parameters/query/To.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved the availability from the server

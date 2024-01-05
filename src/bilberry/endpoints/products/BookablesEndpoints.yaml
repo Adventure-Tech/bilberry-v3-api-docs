@@ -11,6 +11,7 @@ get:
       default: false
       schema:
         type: boolean
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved the bookables from the server
@@ -31,6 +32,8 @@ get:
 put:
   description: Creates new bookables
   tags: [ Products API ]
+  parameters:
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:

@@ -3,6 +3,7 @@ get:
   tags: [Bookings API]
   parameters:
     - $ref: '../../parameters/path/BookingId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved the booking from the server
@@ -17,6 +18,7 @@ patch:
   tags: [Bookings API]
   parameters:
     - $ref: '../../parameters/path/BookingId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:
@@ -43,6 +45,7 @@ delete:
   tags: [Bookings API]
   parameters:
     - $ref: '../../parameters/path/BookingId.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully cancelled the booking on the server

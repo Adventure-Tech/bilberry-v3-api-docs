@@ -1,0 +1,6 @@
+name: tenant
+in: path
+required: true
+description: The tenant identifier or alias
+schema:
+  type: string

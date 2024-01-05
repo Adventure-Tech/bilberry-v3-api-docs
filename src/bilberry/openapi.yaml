@@ -6,44 +6,53 @@ info:
   version: 0.0.0
 
 servers:
-  - url: 'https://bilberry.test/api/v0'
+  - url: 'https://bilberry.app'
+
+components:
+  securitySchemes:
+    elderberryOAuth:
+      $ref: './security/elderberryOAuth.yaml'
+
+security:
+  - elderberryOAuth:
+    - admin
 
 #security:
 #  - BasicAuth: []
 
 paths:
   # Products API
-  /products:
+  /v0/{tenant}/products:
     $ref: './endpoints/products/ProductsEndpoints.yaml'
-  /product/{product}:
+  /v0/{tenant}/products/{product}:
     $ref: './endpoints/products/ProductEndpoints.yaml'
-  /product/{product}/bookables:
+  /v0/{tenant}/products/{product}/bookables:
     $ref: './endpoints/products/BookablesEndpoints.yaml'
-  /product/{product}/availability:
+  /v0/{tenant}/products/{product}/availability:
     $ref: './endpoints/products/AvailabilityEndpoints.yaml'
 
   # VAT API
-  /vat-models:
+  /v0/{tenant}/vat-models:
     $ref: './endpoints/vat/VatsEndpoints.yaml'
-  /vat-models/{vat-model}:
+  /v0/{tenant}/vat-models/{vat-model}:
     $ref: './endpoints/vat/VatEndpoints.yaml'
 
   # Bookings API
-  /bookings:
+  /v0/{tenant}/bookings:
     $ref: './endpoints/bookings/BookingsEndpoints.yaml'
-  /bookings/{booking}:
+  /v0/{tenant}/bookings/{booking}:
     $ref: './endpoints/bookings/BookingEndpoints.yaml'
 
   # Reporting API
-  /invoices/{invoice}:
+  /v0/{tenant}/invoices/{invoice}:
     $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
 
 #  /notifications:
 
 #    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
 
-  /users: {}
-  /resources: {}
+  /v0/{tenant}/users: {}
+  /v0/{tenant}/resources: {}
 
-  /reports: {}
-  /staff: {}
+  /v0/{tenant}/reports: {}
+  /v0/{tenant}/staff: {}

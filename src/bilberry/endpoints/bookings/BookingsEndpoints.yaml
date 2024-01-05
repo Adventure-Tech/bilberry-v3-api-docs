@@ -20,6 +20,7 @@ get:
         $ref: '../../schemas/types/PhoneNumber.yaml'
     - $ref: '../../parameters/query/PageCursor.yaml'
     - $ref: '../../parameters/query/PerPage.yaml'
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   responses:
     200:
       description: Successfully retrieved bookings from the server
@@ -37,6 +38,8 @@ get:
 post:
   description: Creates new booking
   tags: [Bookings API]
+  parameters:
+    - $ref: '../../parameters/path/TenantAlias.yaml'
   requestBody:
     content:
       application/json:
