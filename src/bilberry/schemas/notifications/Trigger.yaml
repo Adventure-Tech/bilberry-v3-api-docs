@@ -6,4 +6,4 @@ properties:
   conditions:
     type: array
     items:
-      $ref: './Condition.yaml'
+      $ref: ./Condition.yaml

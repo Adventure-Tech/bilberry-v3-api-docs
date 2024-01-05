@@ -2,23 +2,23 @@ get:
   description: Returns a single booking based on its ID
   tags: [Bookings API]
   parameters:
-    - $ref: '../../parameters/path/BookingId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/BookingId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved the booking from the server
       content:
         application/json:
           schema:
-            $ref: '../../schemas/bookings/BookingWrapped.yaml'
+            $ref: ../../schemas/bookings/BookingWrapped.yaml
     404:
-      $ref: '../../responses/404NotFound.yaml'
+      $ref: ../../responses/404NotFound.yaml
 patch:
   description: Patch a specific booking based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
   tags: [Bookings API]
   parameters:
-    - $ref: '../../parameters/path/BookingId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/BookingId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
@@ -26,7 +26,7 @@ patch:
           type: array
           items:
             oneOf:
-              - $ref: '../../schemas/jsonpatch/PatchObject.yaml'
+              - $ref: ../../schemas/jsonpatch/PatchObject.yaml
               - type: object
                 properties:
                   op:
@@ -39,13 +39,13 @@ patch:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/bookings/BookingWrapped.yaml'
+            $ref: ../../schemas/bookings/BookingWrapped.yaml
 delete:
   description: Cancel a specific booking based on its ID
   tags: [Bookings API]
   parameters:
-    - $ref: '../../parameters/path/BookingId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/BookingId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully cancelled the booking on the server

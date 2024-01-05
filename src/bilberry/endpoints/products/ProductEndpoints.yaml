@@ -1,9 +1,9 @@
 get:
   description: Returns a single product based on its ID
-  tags: [ Products API ]
+  tags: [Products API]
   parameters:
-    - $ref: '../../parameters/path/ProductId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/ProductId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved the product from the server
@@ -11,25 +11,25 @@ get:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
-                $ref: '../../schemas/products/Product.yaml'
+                $ref: ../../schemas/products/Product.yaml
     404:
-      $ref: '../../responses/404NotFound.yaml'
+      $ref: ../../responses/404NotFound.yaml
 patch:
   description: Patch a specific product based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
-  tags: [ Products API ]
+  tags: [Products API]
   parameters:
-    - $ref: '../../parameters/path/ProductId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/ProductId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
         schema:
           type: array
           items:
-            $ref: '../../schemas/jsonpatch/PatchObject.yaml'
+            $ref: ../../schemas/jsonpatch/PatchObject.yaml
   responses:
     200:
       description: Successfully updated the product on the server
@@ -37,16 +37,16 @@ patch:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
-                $ref: '../../schemas/products/Product.yaml'
+                $ref: ../../schemas/products/Product.yaml
 delete:
   description: Soft-delete a specific product based on its ID
-  tags: [ Products API ]
+  tags: [Products API]
   parameters:
-    - $ref: '../../parameters/path/ProductId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/ProductId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully soft-deleted the product on the server

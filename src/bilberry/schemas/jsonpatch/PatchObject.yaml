@@ -4,21 +4,21 @@ oneOf:
     properties:
       op:
         allOf:
-          - $ref: './Op.yaml'
+          - $ref: ./Op.yaml
           - enum: [add, replace, test]
       path:
-        $ref: './Path.yaml'
+        $ref: ./Path.yaml
       value:
-        $ref: './Value.yaml'
+        $ref: ./Value.yaml
   - type: object
     required: [op, path]
     properties:
       op:
         allOf:
-          - $ref: './Op.yaml'
+          - $ref: ./Op.yaml
           - enum: [remove]
       path:
-        $ref: './Path.yaml'
+        $ref: ./Path.yaml
 #        - type: object
 #          required: [op, from, path]
 #          properties:
@@ -26,6 +26,6 @@ oneOf:
 #              type: string
 #              enum: [move, copy]
 #            from:
-#              $ref: '#/components/schemas/JSONPatchPath'
+#              $ref: #/components/schemas/JSONPatchPath'
 #            path:
-#              $ref: '#/components/schemas/JSONPatchPath'
+#              $ref: #/components/schemas/JSONPatchPath'

@@ -1,5 +1,5 @@
 type: oauth2
-description: This API uses OAuth 2 with the implicit grant flow.
+description: This API uses OAuth 2 with the Authorization Code Flow with Proof Key for Code Exchange (PKCE)
 flows:
   authorizationCode:
     authorizationUrl: https://accounts.bilberry.app/oauth/authorize

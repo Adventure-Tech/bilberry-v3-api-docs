@@ -2,7 +2,7 @@ type: object
 required: [id, name, description, code, percentMinor, createdAt]
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   name:
     type: string
   description:
@@ -10,6 +10,6 @@ properties:
   code:
     type: string
   percentMinor:
-    $ref: '../types/MinorPercentage.yaml'
+    $ref: ../types/MinorPercentage.yaml
   createdAt:
-    $ref: '../types/CreatedAt.yaml'
+    $ref: ../types/CreatedAt.yaml

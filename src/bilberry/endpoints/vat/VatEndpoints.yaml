@@ -1,9 +1,9 @@
 get:
   description: Returns a single vat model based on its ID
-  tags: [ VAT API ]
+  tags: [VAT API]
   parameters:
-    - $ref: '../../parameters/path/VatModelId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/VatModelId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved the vat model from the server
@@ -11,25 +11,25 @@ get:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
-                $ref: '../../schemas/vat/VatModel.yaml'
+                $ref: ../../schemas/vat/VatModel.yaml
     404:
-      $ref: '../../responses/404NotFound.yaml'
+      $ref: ../../responses/404NotFound.yaml
 patch:
   description: Patch a specific vat model based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
-  tags: [ VAT API ]
+  tags: [VAT API]
   parameters:
-    - $ref: '../../parameters/path/VatModelId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/VatModelId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
         schema:
           type: array
           items:
-            $ref: '../../schemas/jsonpatch/PatchObject.yaml'
+            $ref: ../../schemas/jsonpatch/PatchObject.yaml
   responses:
     200:
       description: Successfully updated the vat model on the server
@@ -37,16 +37,16 @@ patch:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
-                $ref: '../../schemas/vat/VatModel.yaml'
+                $ref: ../../schemas/vat/VatModel.yaml
 delete:
   description: Soft-delete a specific vat model based on its ID
-  tags: [ VAT API ]
+  tags: [VAT API]
   parameters:
-    - $ref: '../../parameters/path/VatModelId.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/VatModelId.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully deleted the vat model on the server

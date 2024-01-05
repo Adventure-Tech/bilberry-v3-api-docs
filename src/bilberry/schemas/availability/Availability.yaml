@@ -1,9 +1,9 @@
 type: object
 properties:
   bookableId:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   ticketOptionId:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   start:
     type: string
     format: date-time

@@ -1,9 +1,9 @@
 get:
   description: Returns paginated list of notifications
-  tags: [ Notifications API ]
+  tags: [Notifications API]
   parameters:
-    - $ref: '../../parameters/query/PageCursor.yaml'
-    - $ref: '../../parameters/query/PerPage.yaml'
+    - $ref: ../../parameters/query/PageCursor.yaml
+    - $ref: ../../parameters/query/PerPage.yaml
   responses:
     200:
       description: Successfully retrieved notifications from the server
@@ -15,6 +15,6 @@ get:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/notifications/Notification.yaml'
+                  $ref: ../../schemas/notifications/Notification.yaml
               links:
-                $ref: '../../schemas/pagination/Links.yaml'
+                $ref: ../../schemas/pagination/Links.yaml

@@ -1,10 +1,6 @@
 type: object
-required: [id, createdAt, name, description, cutoffTime, widgetInfo, status, ticketOptions, location]
+required: [name, description, status]
 properties:
-  id:
-    $ref: ../types/Id.yaml
-  createdAt:
-    $ref: ../types/CreatedAt.yaml
   name:
     type: string
   description:
@@ -13,8 +9,10 @@ properties:
     $ref: ./ProductStatus.yaml
   cutoffTime:
     type: integer
+    default: 0
   ticketOptions:
     type: array
+    nullable: true # null, undefined get treated like []
     items:
       $ref: ./TicketOption.yaml
   widgetInfo:

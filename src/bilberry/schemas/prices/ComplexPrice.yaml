@@ -2,9 +2,9 @@ type: object
 required: [id, type, rules]
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   type:
-    $ref: './PriceType.yaml'
+    $ref: ./PriceType.yaml
   rules:
     type: array
     items:
@@ -12,9 +12,9 @@ properties:
       required: [priceMinor, flatFeeMinor, rangeFrom]
       properties:
         priceMinor:
-          $ref: '../types/MinorAmount.yaml'
+          $ref: ../types/MinorAmount.yaml
         flatFeeMinor:
-          $ref: '../types/MinorAmount.yaml'
+          $ref: ../types/MinorAmount.yaml
         rangeFrom:
           type: integer
           minimum: 1

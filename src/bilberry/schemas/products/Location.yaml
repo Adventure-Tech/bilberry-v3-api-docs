@@ -1,10 +1,11 @@
 allOf:
-  - $ref: '../types/Address.yaml'
-  - $ref: '../types/GeographicPoint.yaml'
+  - $ref: ../types/Address.yaml
+  - $ref: ../types/GeographicPoint.yaml
   - type: object
+    required: [id, createdAt]
     properties:
       id:
-        $ref: '../types/Id.yaml'
+        $ref: ../types/Id.yaml
       createdAt:
-        $ref: '../types/CreatedAt.yaml'
-
+        $ref: ../types/CreatedAt.yaml
+  - nullable: true

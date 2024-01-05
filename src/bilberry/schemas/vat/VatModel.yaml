@@ -2,13 +2,13 @@ type: object
 required: [id, versions]
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   versions:
     type: array
     items:
       type: object
       properties:
         rules:
-          $ref: './VatRule.yaml'
+          $ref: ./VatRule.yaml
         validFrom:
-          $ref: '../types/ValidFrom.yaml'
+          $ref: ../types/ValidFrom.yaml

@@ -1,10 +1,10 @@
 get:
   description: Returns paginated list of vat models
-  tags: [ VAT API ]
+  tags: [VAT API]
   parameters:
-    - $ref: '../../parameters/query/PageCursor.yaml'
-    - $ref: '../../parameters/query/PerPage.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/query/PageCursor.yaml
+    - $ref: ../../parameters/query/PerPage.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved vat models from the server
@@ -16,19 +16,19 @@ get:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/vat/VatModel.yaml'
+                  $ref: ../../schemas/vat/VatModel.yaml
               links:
-                $ref: '../../schemas/pagination/Links.yaml'
+                $ref: ../../schemas/pagination/Links.yaml
 post:
   description: Creates new vat model
-  tags: [ VAT API ]
+  tags: [VAT API]
   parameters:
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/vat/VatModel.yaml'
+          $ref: ../../schemas/vat/VatModel.yaml
   responses:
     201:
       description: Successfully created new vat model on the server
@@ -36,7 +36,7 @@ post:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
-                $ref: '../../schemas/vat/VatModel.yaml'
+                $ref: ../../schemas/vat/VatModel.yaml

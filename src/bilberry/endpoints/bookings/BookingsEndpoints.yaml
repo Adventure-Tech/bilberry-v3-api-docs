@@ -17,10 +17,10 @@ get:
       in: query
       description: Filters by phone number (whitespace is trimmed, can omit country code)
       schema:
-        $ref: '../../schemas/types/PhoneNumber.yaml'
-    - $ref: '../../parameters/query/PageCursor.yaml'
-    - $ref: '../../parameters/query/PerPage.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+        $ref: ../../schemas/types/PhoneNumber.yaml
+    - $ref: ../../parameters/query/PageCursor.yaml
+    - $ref: ../../parameters/query/PerPage.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved bookings from the server
@@ -32,23 +32,23 @@ get:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/bookings/Booking.yaml'
+                  $ref: ../../schemas/bookings/Booking.yaml
               links:
-                $ref: '../../schemas/pagination/Links.yaml'
+                $ref: ../../schemas/pagination/Links.yaml
 post:
   description: Creates new booking
   tags: [Bookings API]
   parameters:
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
         schema:
-          $ref: '../../schemas/bookings/Booking.yaml'
+          $ref: ../../schemas/bookings/Booking.yaml
   responses:
     201:
       description: Successfully created new booking on the server
       content:
         application/json:
           schema:
-            $ref: '../../schemas/bookings/BookingWrapped.yaml'
+            $ref: ../../schemas/bookings/BookingWrapped.yaml

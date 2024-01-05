@@ -1,16 +1,16 @@
 type: object
-required: [resource, capacity reduction, mode, createdAt, startOffset, endOffset]
+required: [resourceId, capacity reduction, mode, createdAt, startOffset, endOffset]
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   createdAt:
-    $ref: '../types/CreatedAt.yaml'
-  resource:
-    $ref: '../resources/ResourceShort.yaml'
+    $ref: ../types/CreatedAt.yaml
+  resourceId:
+    $ref: ../types/IdWritable.yaml
   capacityReduction:
     type: integer
   mode:
-    $ref: '../resources/CapacityMode.yaml'
+    $ref: ../resources/CapacityMode.yaml
   startOffset:
     type: integer
     default: 0

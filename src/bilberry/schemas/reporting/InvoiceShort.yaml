@@ -3,6 +3,6 @@ required: [id, createdAt]
 nullable: true
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   createdAt:
-    $ref: '../types/CreatedAt.yaml'
+    $ref: ../types/CreatedAt.yaml

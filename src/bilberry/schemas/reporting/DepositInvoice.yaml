@@ -1,10 +1,10 @@
 allOf:
-  - $ref: '../reporting/InvoiceShort.yaml'
+  - $ref: ../reporting/InvoiceShort.yaml
   - type: object
     required: [amountMinor, amount, creditedAt]
     properties:
       amount:
-        $ref: '../types/Amount.yaml'
+        $ref: ../types/Amount.yaml
       creditedAt:
         type: string
         format: date-time

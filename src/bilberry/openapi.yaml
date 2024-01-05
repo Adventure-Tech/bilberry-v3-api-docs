@@ -7,52 +7,50 @@ info:
 
 servers:
   - url: 'https://bilberry.app'
+  - url: 'https://www.bilberry.app'
 
 components:
   securitySchemes:
     elderberryOAuth:
-      $ref: './security/elderberryOAuth.yaml'
+      $ref: ./security/elderberryOAuth.yaml
 
 security:
   - elderberryOAuth:
     - admin
 
-#security:
-#  - BasicAuth: []
-
 paths:
   # Products API
-  /v0/{tenant}/products:
-    $ref: './endpoints/products/ProductsEndpoints.yaml'
-  /v0/{tenant}/products/{product}:
-    $ref: './endpoints/products/ProductEndpoints.yaml'
-  /v0/{tenant}/products/{product}/bookables:
-    $ref: './endpoints/products/BookablesEndpoints.yaml'
-  /v0/{tenant}/products/{product}/availability:
-    $ref: './endpoints/products/AvailabilityEndpoints.yaml'
+  /{tenant}/v0/products:
+    $ref: ./endpoints/products/ProductsEndpoints.yaml
+  /{tenant}/v0/products/{product}:
+    $ref: ./endpoints/products/ProductEndpoints.yaml
+  /{tenant}/v0/products/{product}/bookables:
+    $ref: ./endpoints/products/BookablesEndpoints.yaml
+  /{tenant}/v0/products/{product}/availability:
+    $ref: ./endpoints/products/AvailabilityEndpoints.yaml
 
   # VAT API
-  /v0/{tenant}/vat-models:
-    $ref: './endpoints/vat/VatsEndpoints.yaml'
-  /v0/{tenant}/vat-models/{vat-model}:
-    $ref: './endpoints/vat/VatEndpoints.yaml'
+  /{tenant}/v0/vat-models:
+    $ref: ./endpoints/vat/VatsEndpoints.yaml
+  /{tenant}/v0/vat-models/{vat-model}:
+    $ref: ./endpoints/vat/VatEndpoints.yaml
 
   # Bookings API
-  /v0/{tenant}/bookings:
-    $ref: './endpoints/bookings/BookingsEndpoints.yaml'
-  /v0/{tenant}/bookings/{booking}:
-    $ref: './endpoints/bookings/BookingEndpoints.yaml'
+  /{tenant}/v0/bookings:
+    $ref: ./endpoints/bookings/BookingsEndpoints.yaml
+  /{tenant}/v0/bookings/{booking}:
+    $ref: ./endpoints/bookings/BookingEndpoints.yaml
 
   # Reporting API
-  /v0/{tenant}/invoices/{invoice}:
-    $ref: './endpoints/reporting/InvoiceEndpoints.yaml'
+  /{tenant}/v0/invoices/{invoice}:
+    $ref: ./endpoints/reporting/InvoiceEndpoints.yaml
 
 #  /notifications:
 
-#    $ref: './endpoints/notifications/NotificationsEndpoints.yaml'
+#    $ref: ./endpoints/notifications/NotificationsEndpoints.yaml
 
-  /v0/{tenant}/users: {}
-  /v0/{tenant}/resources: {}
+  /{tenant}/v0/users: {}
+  /{tenant}/v0/resources: {}
 
-  /v0/{tenant}/reports: {}
-  /v0/{tenant}/staff: {}
+  /{tenant}/v0/reports: {}
+  /{tenant}/v0/staff: {}

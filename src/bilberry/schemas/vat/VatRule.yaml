@@ -2,7 +2,7 @@ type: object
 required: [default, fixed, percentage]
 properties:
   default:
-    $ref: './VatCategory.yaml'
+    $ref: ./VatCategory.yaml
   fixed:
     type: array
     items:
@@ -11,10 +11,10 @@ properties:
           required: [amountMinor, description]
           properties:
             amountMinor:
-              $ref: '../types/MinorAmount.yaml'
+              $ref: ../types/MinorAmount.yaml
             description:
               type: string
-        - $ref: './VatCategory.yaml'
+        - $ref: ./VatCategory.yaml
   percentage:
     type: array
     items:
@@ -23,7 +23,7 @@ properties:
           required: [percentMinor, description]
           properties:
             percentMinor:
-              $ref: '../types/MinorPercentage.yaml'
+              $ref: ../types/MinorPercentage.yaml
             description:
               type: string
-        - $ref: './VatCategory.yaml'
+        - $ref: ./VatCategory.yaml

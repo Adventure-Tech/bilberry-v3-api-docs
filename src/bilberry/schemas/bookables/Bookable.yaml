@@ -1,7 +1,7 @@
 type: object
 properties:
   ticketOptionId:
-    $ref: '../types/IdWritable.yaml'
+    $ref: ../types/IdWritable.yaml
   start:
     type: string
     format: date-time
@@ -9,7 +9,7 @@ properties:
     type: string
     format: date-time
   price:
-    $ref: '../prices/Price.yaml'
+    $ref: ../prices/Price.yaml
   maxCapacity:
     type: integer
     minimum: 0

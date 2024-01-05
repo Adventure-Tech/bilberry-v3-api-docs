@@ -5,4 +5,4 @@ properties:
     type: integer
     minimum: 0
   currencyCode:
-    $ref: './Currency.yaml'
+    $ref: ./Currency.yaml

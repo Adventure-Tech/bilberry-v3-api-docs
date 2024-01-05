@@ -1,17 +1,17 @@
 get:
   description: Returns list of bookables
-  tags: [ Products API ]
+  tags: [Products API]
   parameters:
-    - $ref: '../../parameters/path/ProductId.yaml'
-    - $ref: '../../parameters/query/From.yaml'
-    - $ref: '../../parameters/query/To.yaml'
+    - $ref: ../../parameters/path/ProductId.yaml
+    - $ref: ../../parameters/query/From.yaml
+    - $ref: ../../parameters/query/To.yaml
     - name: timeslot
       description: TODO
       in: query
       default: false
       schema:
         type: boolean
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/TenantAlias.yaml
   responses:
     200:
       description: Successfully retrieved the bookables from the server
@@ -23,24 +23,24 @@ get:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/bookables/Bookable.yaml'
+                  $ref: ../../schemas/bookables/Bookable.yaml
 #              meta:
-#                $ref: '../../schemas/bookables/BookableCreationMeta.yaml'
+#                $ref: ../../schemas/bookables/BookableCreationMeta.yaml
 #              links:
-#                $ref: '../../schemas/pagination/Links.yaml'
+#                $ref: ../../schemas/pagination/Links.yaml
 
 put:
   description: Creates new bookables
-  tags: [ Products API ]
+  tags: [Products API]
   parameters:
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/TenantAlias.yaml
   requestBody:
     content:
       application/json:
         schema:
           type: array
           items:
-            $ref: '../../schemas/bookables/Bookable.yaml'
+            $ref: ../../schemas/bookables/Bookable.yaml
   responses:
     201:
       description: Successfully created new bookables on the server
@@ -48,9 +48,9 @@ put:
         application/json:
           schema:
             type: object
-            required: [ data ]
+            required: [data]
             properties:
               data:
                 type: array
                 items:
-                  $ref: '../../schemas/bookables/Bookable.yaml'
+                  $ref: ../../schemas/bookables/Bookable.yaml

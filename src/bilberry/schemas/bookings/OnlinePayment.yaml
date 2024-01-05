@@ -10,9 +10,9 @@ properties:
     type: string
     enum: [NETS, STRIPE]
   amount:
-    $ref: '../types/Amount.yaml'
+    $ref: ../types/Amount.yaml
   createdAt:
-    $ref: '../types/CreatedAt.yaml'
+    $ref: ../types/CreatedAt.yaml
   status:
     type: string
     enum: [CREATED, TIMED_OUT, COMPLETED, CANCELLED]
@@ -21,5 +21,5 @@ properties:
     format: date-time
   bilberryPaymentId:
     allOf:
-      - $ref: '../types/ULID.yaml'
+      - $ref: ../types/ULID.yaml
       - nullable: true

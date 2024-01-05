@@ -3,5 +3,7 @@ required: [longitude, latitude]
 properties:
   longitude:
     type: number
+    nullable: true
   latitude:
     type: number
+    nullable: true

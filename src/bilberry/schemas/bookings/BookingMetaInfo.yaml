@@ -14,6 +14,6 @@ allOf:
         nullable: true
       phone:
         allOf:
-          - $ref: '../types/PhoneNumber.yaml'
+          - $ref: ../types/PhoneNumber.yaml
           - nullable: true
-  - $ref: '../types/Address.yaml' # TODO: nullability
+  - $ref: ../types/Address.yaml # TODO: nullability

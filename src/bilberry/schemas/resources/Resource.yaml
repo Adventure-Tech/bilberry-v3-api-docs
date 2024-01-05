@@ -1,5 +1,5 @@
 allOf:
-  - $ref: './ResourceShort.yaml'
+  - $ref: ./ResourceShort.yaml
   - type: object
     required: [name, capacity, isManaged]
     properties:

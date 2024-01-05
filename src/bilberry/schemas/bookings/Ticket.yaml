@@ -1,8 +1,8 @@
 type: object
-required: [ id, bookableId, quantity ]
+required: [id, bookableId, quantity]
 properties:
   id:
-    $ref: '../types/ULID.yaml'
+    $ref: ../types/ULID.yaml
   bookableId:
     type: integer
   quantity:

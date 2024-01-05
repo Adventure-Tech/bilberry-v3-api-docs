@@ -2,7 +2,7 @@ type: object
 required: [id, name, description, active, triggers, createdAt]
 properties:
   id:
-    $ref: '../types/Id.yaml'
+    $ref: ../types/Id.yaml
   name:
     type: string
   description:
@@ -12,6 +12,6 @@ properties:
   triggers:
     type: array
     items:
-      $ref: './Trigger.yaml'
+      $ref: ./Trigger.yaml
   createdAt:
-    $ref: '../types/CreatedAt.yaml'
+    $ref: ../types/CreatedAt.yaml

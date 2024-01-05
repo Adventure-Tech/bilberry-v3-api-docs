@@ -3,8 +3,8 @@ allOf:
     required: [id]
     properties:
       id:
-        $ref: '../types/ULID.yaml'
-  - $ref: './BookingMetaInfo.yaml'
+        $ref: ../types/ULID.yaml
+  - $ref: ./BookingMetaInfo.yaml
   - type: object
     required: [expiresAt, tickets, invoice, creditedInvoices, depositInvoices, payments, onlinePayments]
     properties:
@@ -16,10 +16,10 @@ allOf:
       tickets:
         type: array
         items:
-          $ref: './Ticket.yaml'
+          $ref: ./Ticket.yaml
       invoice:
         allOf:
-          - $ref: '../reporting/InvoiceShort.yaml'
+          - $ref: ../reporting/InvoiceShort.yaml
           - readOnly: true
             nullable: true
       creditedInvoices:
@@ -27,7 +27,7 @@ allOf:
         readOnly: true
         items:
           allOf:
-            - $ref: '../reporting/InvoiceShort.yaml'
+            - $ref: ../reporting/InvoiceShort.yaml
             - type: object
               required: [creditedAt]
               properties:
@@ -37,13 +37,13 @@ allOf:
       depositInvoices:
         type: array
         items:
-          $ref: '../reporting/DepositInvoice.yaml'
+          $ref: ../reporting/DepositInvoice.yaml
       payments:
         type: array
         items:
-          $ref: './Payment.yaml'
+          $ref: ./Payment.yaml
       onlinePayments:
         type: array
         readOnly: true
         items:
-          $ref: './OnlinePayment.yaml'
+          $ref: ./OnlinePayment.yaml

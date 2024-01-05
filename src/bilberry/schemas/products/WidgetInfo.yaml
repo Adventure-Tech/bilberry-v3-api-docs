@@ -1,6 +1,24 @@
-allOf:
-  - $ref: './WidgetInfoNonTranslatable.yaml'
-  - type: object
-    properties:
-      translatable:
-       $ref: './WidgetInfoTranslatable.yaml'
+type: object
+required: [id, createdAt, minAge, minPriceMinor, duration, translatable]
+nullable: true
+properties:
+  id:
+    $ref: ../types/Id.yaml
+  createdAt:
+    $ref: ../types/CreatedAt.yaml
+  minAge:
+    type: integer
+    nullable: true
+  minPriceMinor:
+    type: integer
+    nullable: true
+  duration:
+    type: integer
+    nullable: true
+  difficulty:
+    $ref: ../types/Difficulty.yaml
+  translations:
+    type: array
+    nullable: true
+    items:
+      $ref: ./WidgetInfoTranslation.yaml

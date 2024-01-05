@@ -1,21 +1,23 @@
-allOf:
-  - oneOf:
-    - $ref: './StandardPrice.yaml'
-    - $ref: './ComplexPrice.yaml'
-    discriminator:
-      propertyName: type
-      mapping:
-        standard: './StandardPrice.yaml'
-        graduated: './ComplexPrice.yaml'
-        volume: './ComplexPrice.yaml'
-  - type: object
-#    required: [id, additionalRules, createdAt, validFrom]
-    properties:
-      id:
-        $ref: '../types/Id.yaml'
-      createdAt:
-        $ref: '../types/CreatedAt.yaml'
-#      additionalRules:
-#        type: array
-#        items:
-#          type: object
+type: string
+#TODO
+#allOf:
+#  - oneOf:
+#    - $ref: ./StandardPrice.yaml
+#    - $ref: ./ComplexPrice.yaml
+#    discriminator:
+#      propertyName: type
+#      mapping:
+#        standard: './StandardPrice.yaml
+#        graduated: './ComplexPrice.yaml
+#        volume: './ComplexPrice.yaml
+#  - type: object
+##    required: [id, additionalRules, createdAt, validFrom]
+#    properties:
+#      id:
+#        $ref: ../types/Id.yaml
+#      createdAt:
+#        $ref: ../types/CreatedAt.yaml
+##      additionalRules:
+##        type: array
+##        items:
+##          type: object

@@ -1,0 +1,6 @@
+type: string
+nullable: true
+enum:
+  - EASY
+  - MEDIUM
+  - HARD

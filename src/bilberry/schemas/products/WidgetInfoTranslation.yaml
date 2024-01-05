@@ -1,0 +1,33 @@
+type: object
+required: [id, title, shortDescription, longDescription, termsAndConditions, url, additionalInfo]
+properties:
+  id:
+    $ref: ../types/Locale.yaml
+  title:
+    type: string
+  shortDescription:
+    type: string
+  longDescription:
+    type: string
+  termsAndConditions:
+    type: string
+  url:
+    type: string
+    format: url
+  additionalInfo:
+    type: string
+#example:
+#  en-US:
+#    title: Go Climbing
+#    shortDescription: Climb up some trees
+#    longDescription: Climb up some trees for 3 hours at our awesome park
+#    additionalInfo: Not for people with fear of heights
+#    termsAndConditions: tldr
+#    url: 'https://awesome.climbing.no/en/3-hour-tree-climbing'
+#  nb-NO:
+#    title: Gå på klatring
+#    shortDescription: Klatre opp noen trær
+#    longDescription: Klatre opp noen trær i 3 timer i vår fantastiske park
+#    additionalInfo: Ikke for personer med høydeskrekk
+#    termsAndConditions: tldr
+#    url: 'https://awesome.climbing.no/no/3-hour-tree-climbing'

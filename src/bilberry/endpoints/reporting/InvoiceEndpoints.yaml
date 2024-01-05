@@ -1,8 +1,8 @@
 get:
   description: Returns a single invoice based on its reference
   parameters:
-    - $ref: '../../parameters/path/InvoiceRef.yaml'
-    - $ref: '../../parameters/path/TenantAlias.yaml'
+    - $ref: ../../parameters/path/InvoiceRef.yaml
+    - $ref: ../../parameters/path/TenantAlias.yaml
   tags: [Reporting API]
   responses:
     200:
@@ -10,6 +10,6 @@ get:
       content:
         application/json:
           schema:
-            $ref: '../../schemas/reporting/InvoiceWrapped.yaml'
+            $ref: ../../schemas/reporting/InvoiceWrapped.yaml
     404:
-      $ref: '../../responses/404NotFound.yaml'
+      $ref: ../../responses/404NotFound.yaml
