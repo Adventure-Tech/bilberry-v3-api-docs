@@ -1,6 +1,0 @@
-allOf:
-  - $ref: './WidgetInfoNonTranslatable.yaml'
-  - type: object
-    properties:
-      translatable:
-       $ref: './WidgetInfoTranslatable.yaml'

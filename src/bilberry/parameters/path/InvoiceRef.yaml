@@ -1,8 +1,0 @@
-name: invoice
-in: path
-required: true
-description: The invoice ref
-schema:
-  type: integer
-  minimum: 0
-example: "100427"

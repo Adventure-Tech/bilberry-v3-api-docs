@@ -1,7 +1,0 @@
-name: from
-description: TODO
-in: query
-required: true
-schema:
-  type: string
-  format: date-time

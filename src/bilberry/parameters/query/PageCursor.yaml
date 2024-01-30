@@ -1,7 +1,0 @@
-name: page
-in: query
-description: The cursor pointing to a page
-schema:
-  type: string
-  format: base64-encoded-string
-  example: MXwwMUhDOVpIVkpSVEZZQ1gzMUdZVkQ5WDEzMXxuZXh0

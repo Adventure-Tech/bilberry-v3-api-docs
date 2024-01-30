@@ -1,3 +1,0 @@
-type: string
-description: A path in the request object of the related POST request following modified JSON patch syntax
-example: /my/paths/12/asd

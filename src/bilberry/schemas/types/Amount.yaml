@@ -1,8 +1,0 @@
-type: object
-required: [minorValue, currencyCode]
-properties:
-  minorValue:
-    type: integer
-    minimum: 0
-  currencyCode:
-    $ref: './Currency.yaml'

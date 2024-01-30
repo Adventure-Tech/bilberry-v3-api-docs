@@ -1,7 +1,0 @@
-name: vat-model
-in: path
-required: true
-description: The vat model ID
-schema:
-  type: integer
-  minimum: 0

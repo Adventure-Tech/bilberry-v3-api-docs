@@ -1,7 +1,0 @@
-type: object
-required: [longitude, latitude]
-properties:
-  longitude:
-    type: number
-  latitude:
-    type: number

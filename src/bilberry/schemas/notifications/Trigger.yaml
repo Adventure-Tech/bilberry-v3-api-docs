@@ -1,9 +1,0 @@
-type: object
-required: [eventType, conditions]
-properties:
-  eventType:
-    type: string
-  conditions:
-    type: array
-    items:
-      $ref: './Condition.yaml'
