@@ -32,7 +32,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Product'
+                      $ref: '#/components/schemas/ProductResponse'
                   links:
                     $ref: '#/components/schemas/Links'
     post:
@@ -57,7 +57,9 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: '#/components/schemas/Product'
+                    $ref: '#/components/schemas/ProductResponse'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/products/{product}:
     get:
       description: Returns a single product based on its ID
@@ -76,7 +78,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: '#/components/schemas/Product'
+                    $ref: '#/components/schemas/ProductResponse'
         '404':
           $ref: '#/components/responses/404NotFound'
     patch:
@@ -104,7 +106,9 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: '#/components/schemas/Product'
+                    $ref: '#/components/schemas/ProductResponse'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
     delete:
       description: Soft-delete a specific product based on its ID
       tags:
@@ -115,6 +119,8 @@ paths:
       responses:
         '200':
           description: Successfully soft-deleted the product on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/products/{product}/bookables:
     get:
       description: Returns list of bookables
@@ -175,7 +181,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Bookable'
       responses:
-        '200':
+        '201':
           description: Successfully created new bookable on the server
           content:
             application/json:
@@ -186,6 +192,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Bookable'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
     put:
       description: Creates new bookables
       tags:
@@ -213,6 +221,8 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Bookable'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/vat-models:
     get:
       description: Returns paginated list of vat models
@@ -259,7 +269,9 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/VatModel'
-  /{tenant}/api/v0/vat-models/{vat-model}:
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/vat-models/{vatModel}:
     get:
       description: Returns a single vat model based on its ID
       tags:
@@ -307,6 +319,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/VatModel'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
     delete:
       description: Soft-delete a specific vat model based on its ID
       tags:
@@ -317,6 +331,8 @@ paths:
       responses:
         '200':
           description: Successfully deleted the vat model on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/bookings:
     get:
       description: Returns paginated list of bookings
@@ -374,6 +390,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingWrapped'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/bookings/{booking}:
     get:
       description: Returns a single booking based on its ID
@@ -444,6 +462,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookingWrapped'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
     delete:
       description: Cancel a specific booking based on its ID
       tags:
@@ -454,6 +474,8 @@ paths:
       responses:
         '200':
           description: Successfully cancelled the booking on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/invoices/{invoice}:
     get:
       description: Returns a single invoice based on its reference
@@ -547,7 +569,7 @@ components:
         type: string
         format: date-time
     VatModelId:
-      name: vat-model
+      name: vatModel
       in: path
       required: true
       description: The vat model ID
@@ -636,6 +658,7 @@ components:
         - name
         - minAge
         - maxAge
+        - vatModelId
         - resourceRequirements
       properties:
         id:
@@ -696,6 +719,10 @@ components:
           type:
             - string
             - 'null'
+        additionalInfo:
+          type:
+            - string
+            - 'null'
         termsAndConditions:
           type:
             - string
@@ -705,10 +732,6 @@ components:
             - string
             - 'null'
           format: url
-        additionalInfo:
-          type:
-            - string
-            - 'null'
     WidgetInfo:
       type:
         - object
@@ -751,6 +774,21 @@ components:
             description: The locale of the translation, e.g. "en-US"
           additionalProperties:
             $ref: '#/components/schemas/WidgetInfoTranslation'
+          examples:
+            - en-US:
+                title: Go Climbing
+                shortDescription: Climb up some trees
+                longDescription: Climb up some trees for 3 hours at our awesome park
+                additionalInfo: Not for people with fear of heights
+                termsAndConditions: tldr
+                url: https://awesome.climbing.no/en/3-hour-tree-climbing
+            - nb-NO:
+                title: Gå på klatring
+                shortDescription: Klatre opp noen trær
+                longDescription: Klatre opp noen trær i 3 timer i vår fantastiske park
+                additionalInfo: Ikke for personer med høydeskrekk
+                termsAndConditions: tldr
+                url: https://awesome.climbing.no/no/3-hour-tree-climbing
     QuestionTranslation:
       type: object
       required:
@@ -837,15 +875,16 @@ components:
       allOf:
         - $ref: '#/components/schemas/Address'
         - $ref: '#/components/schemas/GeographicPoint'
-        - type: object
+        - type:
+            - object
+            - 'null'
           required: []
           properties:
             id:
               $ref: '#/components/schemas/Id'
             createdAt:
               $ref: '#/components/schemas/ReadOnlyDatetime'
-        - nullable: true
-    Product:
+    ProductResponse:
       type: object
       required:
         - id
@@ -945,9 +984,14 @@ components:
       type: string
       description: A path in the request object of the related POST request following modified JSON patch syntax
       examples:
-        - /my/paths/12/asd
+        - my.paths[12].asd
     Value:
       description: The value used for the operation (any type)
+    RemovePath:
+      type: string
+      description: A path in the request object of the related POST request following modified JSON patch syntax
+      examples:
+        - my.path[12]
     PatchObject:
       oneOf:
         - type: object
@@ -961,9 +1005,8 @@ components:
               type: string
               description: The operation to be carried out
               enum:
-                - add
                 - set
-                - test
+                - add
             path:
               $ref: '#/components/schemas/Path'
             value:
@@ -980,7 +1023,7 @@ components:
               enum:
                 - remove
             path:
-              $ref: '#/components/schemas/Path'
+              $ref: '#/components/schemas/RemovePath'
     PriceType:
       type: string
       enum:
@@ -1182,72 +1225,79 @@ components:
       oneOf:
         - $ref: '#/components/schemas/NonTimeslotBookable'
         - $ref: '#/components/schemas/TimeslotBookable'
-    VatCategory:
+    ValidFrom:
+      type: string
+      format: date-time
+    DefaultVatRule:
       type: object
       required:
-        - id
-        - name
         - description
-        - code
-        - percentMinor
-        - createdAt
+        - vatCategoryId
       properties:
         id:
           $ref: '#/components/schemas/Id'
-        name:
-          type: string
         description:
           type: string
-        code:
+        vatCategoryId:
+          $ref: '#/components/schemas/IdWritable'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+    AmountBasedVatRule:
+      type: object
+      required:
+        - description
+        - vatCategoryId
+        - amountMinor
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        description:
           type: string
-        percentMinor:
+        amountMinor:
+          $ref: '#/components/schemas/MinorAmount'
+        vatCategoryId:
+          $ref: '#/components/schemas/IdWritable'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+    PercentageBasedVatRule:
+      type: object
+      required:
+        - description
+        - vatCategoryId
+        - percentageMinor
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        description:
+          type: string
+        percentageMinor:
           $ref: '#/components/schemas/MinorPercentage'
+        vatCategoryId:
+          $ref: '#/components/schemas/IdWritable'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
     VatRule:
       type: object
       required:
         - default
-        - fixed
-        - percentage
+        - amountBased
+        - percentageBased
       properties:
         default:
-          $ref: '#/components/schemas/VatCategory'
-        fixed:
+          $ref: '#/components/schemas/DefaultVatRule'
+        amountBased:
           type: array
           items:
             allOf:
-              - type: object
-                required:
-                  - amountMinor
-                  - description
-                properties:
-                  amountMinor:
-                    $ref: '#/components/schemas/MinorAmount'
-                  description:
-                    type: string
-              - $ref: '#/components/schemas/VatCategory'
-        percentage:
+              - $ref: '#/components/schemas/AmountBasedVatRule'
+        percentageBased:
           type: array
           items:
             allOf:
-              - type: object
-                required:
-                  - percentMinor
-                  - description
-                properties:
-                  percentMinor:
-                    $ref: '#/components/schemas/MinorPercentage'
-                  description:
-                    type: string
-              - $ref: '#/components/schemas/VatCategory'
-    ValidFrom:
-      type: string
-      format: date-time
+              - $ref: '#/components/schemas/PercentageBasedVatRule'
     VatModel:
       type: object
       required:
-        - id
         - versions
       properties:
         id:
@@ -1257,10 +1307,12 @@ components:
           items:
             type: object
             properties:
-              rules:
-                $ref: '#/components/schemas/VatRule'
+              id:
+                $ref: '#/components/schemas/Id'
               validFrom:
                 $ref: '#/components/schemas/ValidFrom'
+              rules:
+                $ref: '#/components/schemas/VatRule'
     PhoneNumber:
       type: string
       format: phone
@@ -1563,6 +1615,22 @@ components:
         timezone:
           $ref: '#/components/schemas/Timezone'
   responses:
+    422UnprocessableEntity:
+      description: Unprocessable entity error / validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              description:
+                type: string
+              details:
+                type: object
+                properties: {}
+              status:
+                type: integer
     404NotFound:
       description: Not found error
       content:
@@ -1577,5 +1645,5 @@ components:
               details:
                 type: object
                 properties: {}
-              code:
+              status:
                 type: integer
