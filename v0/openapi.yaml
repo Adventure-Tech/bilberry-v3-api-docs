@@ -333,6 +333,118 @@ paths:
           description: Successfully deleted the vat model on the server
         '404':
           $ref: '#/components/responses/404NotFound'
+  /{tenant}/api/v0/vat-categories:
+    get:
+      description: Returns paginated list of vat categories
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved vat categories from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VatCategory'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new vat category
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VatCategory'
+      responses:
+        '201':
+          description: Successfully created new vat category on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatCategory'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/vat-categories/{vatCategory}:
+    get:
+      description: Returns a single vat category based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatCategoryId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the vat category from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatCategory'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific vat category based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatCategoryId'
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the vat category on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VatCategory'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Soft-delete a specific vat category based on its ID
+      tags:
+        - VAT API
+      parameters:
+        - $ref: '#/components/parameters/VatCategoryId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully deleted the vat category on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '409':
+          $ref: '#/components/responses/409Conflict'
   /{tenant}/api/v0/bookings:
     get:
       description: Returns paginated list of bookings
@@ -554,6 +666,8 @@ components:
       schema:
         type: integer
         minimum: 0
+        examples:
+          - 1
     From:
       name: from
       description: TODO
@@ -576,6 +690,18 @@ components:
       schema:
         type: integer
         minimum: 0
+        examples:
+          - 3
+    VatCategoryId:
+      name: vatCategory
+      in: path
+      required: true
+      description: The vat category ID
+      schema:
+        type: integer
+        minimum: 0
+        examples:
+          - 3
     BookingId:
       name: booking
       in: path
@@ -598,6 +724,9 @@ components:
       type: integer
       minimum: 1
       readOnly: true
+      examples:
+        - 1
+        - 2
     ReadOnlyDatetime:
       type: string
       format: date-time
@@ -845,32 +974,47 @@ components:
           type:
             - string
             - 'null'
+          examples:
+            - Vestfjordgata 20
         city:
           type:
             - string
             - 'null'
+          examples:
+            - Svolvær
         postalCode:
           type:
             - string
             - 'null'
+          examples:
+            - '8300'
         country:
           type:
             - string
             - 'null'
+          description: ISO 3166-1 alpha-3 code, ISO 3166-1 alpha-2 code or english full name
+          examples:
+            - Norway
+            - NOR
+            - 'NO'
     GeographicPoint:
       type: object
       required:
         - longitude
         - latitude
       properties:
-        longitude:
-          type:
-            - number
-            - 'null'
         latitude:
           type:
             - number
             - 'null'
+          examples:
+            - 68.23334442873325
+        longitude:
+          type:
+            - number
+            - 'null'
+          examples:
+            - 14.566281715341558
     Location:
       allOf:
         - $ref: '#/components/schemas/Address'
@@ -1101,6 +1245,8 @@ components:
       type: integer
       minimum: 0
       maximum: 10000
+      examples:
+        - 2500
     VatAmount:
       type: object
       required:
@@ -1313,6 +1459,48 @@ components:
                 $ref: '#/components/schemas/ValidFrom'
               rules:
                 $ref: '#/components/schemas/VatRule'
+    Datetime:
+      type: string
+      format: date-time
+    Account:
+      type:
+        - string
+        - 'null'
+      examples:
+        - '3100'
+    VatCategoryVersion:
+      type: object
+      required:
+        - validFrom
+        - description
+        - account
+        - percentageMinor
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        validFrom:
+          $ref: '#/components/schemas/Datetime'
+        description:
+          type: string
+        account:
+          $ref: '#/components/schemas/Account'
+        percentageMinor:
+          $ref: '#/components/schemas/MinorPercentage'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+    VatCategory:
+      type: object
+      required:
+        - versions
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/VatCategoryVersion'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
     PhoneNumber:
       type: string
       format: phone
@@ -1329,6 +1517,7 @@ components:
       type: string
       examples:
         - nb-NO
+        - en-US
     BookingMetaInfo:
       allOf:
         - type: object
@@ -1645,5 +1834,18 @@ components:
               details:
                 type: object
                 properties: {}
+              status:
+                type: integer
+    409Conflict:
+      description: The request could not be completed due to a conflict with the current state of the target resource.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              description:
+                type: string
               status:
                 type: integer
