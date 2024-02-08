@@ -1426,18 +1426,20 @@ components:
       type: object
       required:
         - default
-        - amountBased
-        - percentageBased
       properties:
         default:
           $ref: '#/components/schemas/DefaultVatRule'
         amountBased:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             allOf:
               - $ref: '#/components/schemas/AmountBasedVatRule'
         percentageBased:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
             allOf:
               - $ref: '#/components/schemas/PercentageBasedVatRule'
