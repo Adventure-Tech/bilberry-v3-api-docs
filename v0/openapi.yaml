@@ -588,6 +588,116 @@ paths:
           description: Successfully cancelled the booking on the server
         '404':
           $ref: '#/components/responses/404NotFound'
+  /{tenant}/api/v0/resources:
+    get:
+      description: Returns paginated list of resources
+      tags:
+        - Resource API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved resources from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Resource'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new resource
+      tags:
+        - Resource API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resource'
+      responses:
+        '201':
+          description: Successfully created new resource on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Resource'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/resources/{resource}:
+    get:
+      description: Returns a single resource based on its ID
+      tags:
+        - Resource API
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the resource from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Resource'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific resource based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - Resource API
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the resource on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Resource'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Soft-delete a specific resource based on its ID
+      tags:
+        - Resource API
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully deleted the resource on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/invoices/{invoice}:
     get:
       description: Returns a single invoice based on its reference
@@ -709,6 +819,14 @@ components:
       description: The booking ID
       schema:
         $ref: '#/components/schemas/ULID'
+    ResourceId:
+      name: resource
+      in: path
+      required: true
+      description: The resource ID
+      schema:
+        type: integer
+        minimum: 0
     InvoiceRef:
       name: invoice
       in: path
@@ -1733,6 +1851,51 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Booking'
+    ResourceCapacityOverrides:
+      type: object
+      required:
+        - start
+        - end
+        - capacity
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        start:
+          $ref: '#/components/schemas/Datetime'
+        end:
+          $ref: '#/components/schemas/Datetime'
+        capacity:
+          type: integer
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+    Resource:
+      type: object
+      required:
+        - name
+        - capacity
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        description:
+          type:
+            - string
+            - 'null'
+        capacity:
+          type: integer
+          minimum: 0
+        isManaged:
+          type: boolean
+          default: true
+        capacityOverrides:
+          type:
+            - array
+            - 'null'
+          items:
+            $ref: '#/components/schemas/ResourceCapacityOverrides'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
     InvoiceShort:
       type:
         - object
