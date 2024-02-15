@@ -1058,7 +1058,7 @@ components:
         type:
           type: string
           enum:
-            - ORDER
+            - BOOKING
             - GUEST
         answerForm:
           type: string
