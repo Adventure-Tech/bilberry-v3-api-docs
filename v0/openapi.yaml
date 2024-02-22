@@ -1764,7 +1764,7 @@ components:
         - netsPaymentId
         - amount
         - createdAt
-        - updatedAt
+        - statusUpdatedAt
         - status
         - paymentType
       properties:
@@ -1778,7 +1778,7 @@ components:
           $ref: '#/components/schemas/Amount'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
-        updatedAt:
+        statusUpdatedAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
         status:
           $ref: '#/components/schemas/NetsPaymentStatus'
