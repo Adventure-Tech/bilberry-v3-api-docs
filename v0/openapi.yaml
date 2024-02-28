@@ -698,6 +698,120 @@ paths:
           description: Successfully deleted the resource on the server
         '404':
           $ref: '#/components/responses/404NotFound'
+  /{tenant}/api/v0/giftcards:
+    get:
+      description: Returns paginated list of giftcards
+      tags:
+        - Giftcards API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved giftcards from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Giftcard'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new giftcard
+      tags:
+        - Giftcards API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GiftcardPostRequest'
+      responses:
+        '201':
+          description: Successfully created new giftcard on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Giftcard'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/giftcards/{giftcard}:
+    get:
+      description: Returns a single giftcard based on its ID
+      tags:
+        - Giftcards API
+      parameters:
+        - $ref: '#/components/parameters/GiftcardId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the giftcard from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Giftcard'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific giftcard based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - Giftcards API
+      parameters:
+        - $ref: '#/components/parameters/GiftcardId'
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the giftcard on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Giftcard'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Cancel a specific giftcard based on its ID
+      tags:
+        - Giftcards API
+      parameters:
+        - $ref: '#/components/parameters/GiftcardId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully cancelled the giftcard on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '409':
+          $ref: '#/components/responses/409Conflict'
   /{tenant}/api/v0/invoices/{invoice}:
     get:
       description: Returns a single invoice based on its reference
@@ -827,6 +941,13 @@ components:
       schema:
         type: integer
         minimum: 0
+    GiftcardId:
+      name: giftcard
+      in: path
+      required: true
+      description: The giftcard ID
+      schema:
+        $ref: '#/components/schemas/ULID'
     InvoiceRef:
       name: invoice
       in: path
@@ -1896,6 +2017,91 @@ components:
             $ref: '#/components/schemas/ResourceCapacityOverrides'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+    Contact:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+      properties:
+        firstName:
+          type: string
+          examples:
+            - Ola
+        lastName:
+          type: string
+          examples:
+            - Nordmann
+        email:
+          type: string
+          format: email
+          examples:
+            - ola.nordmann@example.com
+    NullableDatetime:
+      type:
+        - string
+        - 'null'
+      format: date-time
+    GiftcardCode:
+      type: string
+      examples:
+        - 123-456-789
+    GiftcardUsage:
+      type: object
+      required:
+        - bookingId
+        - amountMinor
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        bookingId:
+          $ref: '#/components/schemas/ULID'
+        amountMinor:
+          $ref: '#/components/schemas/MinorAmount'
+    Giftcard:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        invoiceNumber:
+          type:
+            - integer
+            - 'null'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        amountAvailable:
+          $ref: '#/components/schemas/Amount'
+        expiresAt:
+          $ref: '#/components/schemas/NullableDatetime'
+        code:
+          $ref: '#/components/schemas/GiftcardCode'
+        enabled:
+          type: boolean
+        usages:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/GiftcardUsage'
+    GiftcardPostRequest:
+      type: object
+      required:
+        - contact
+        - amountMinor
+      properties:
+        contact:
+          $ref: '#/components/schemas/Contact'
+        amountMinor:
+          $ref: '#/components/schemas/MinorAmount'
+        expiresAt:
+          $ref: '#/components/schemas/NullableDatetime'
+        code:
+          $ref: '#/components/schemas/GiftcardCode'
     InvoiceShort:
       type:
         - object
