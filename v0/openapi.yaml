@@ -443,8 +443,6 @@ paths:
           description: Successfully deleted the vat category on the server
         '404':
           $ref: '#/components/responses/404NotFound'
-        '409':
-          $ref: '#/components/responses/409Conflict'
   /{tenant}/api/v0/bookings:
     get:
       description: Returns paginated list of bookings
@@ -975,6 +973,12 @@ components:
       enum:
         - DRAFT
         - PUBLISHED
+    NullableReadOnlyDatetime:
+      type:
+        - string
+        - 'null'
+      format: date-time
+      readOnly: true
     Age:
       type: integer
       minimum: 0
@@ -1031,6 +1035,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/Id'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
         name:
@@ -1199,6 +1205,13 @@ components:
             description: The locale of the translation, e.g. "en-US"
           additionalProperties:
             $ref: '#/components/schemas/QuestionTranslation'
+          examples:
+            - en-US:
+                id: 1
+                questionFormulation: What size do you need for you climbing shoes?
+            - nb-NO:
+                id: 2
+                questionFormulation: Hvilken størrelse trenger du på klatreskoene dine?
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
     Address:
@@ -1619,14 +1632,10 @@ components:
         - description
         - vatCategoryId
       properties:
-        id:
-          $ref: '#/components/schemas/Id'
         description:
           type: string
         vatCategoryId:
           $ref: '#/components/schemas/IdWritable'
-        createdAt:
-          $ref: '#/components/schemas/ReadOnlyDatetime'
     AmountBasedVatRule:
       type: object
       required:
@@ -1644,6 +1653,8 @@ components:
           $ref: '#/components/schemas/IdWritable'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
     PercentageBasedVatRule:
       type: object
       required:
@@ -1661,6 +1672,8 @@ components:
           $ref: '#/components/schemas/IdWritable'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
     VatRule:
       type: object
       required:
@@ -1689,6 +1702,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
         versions:
           type: array
           items:
@@ -1728,6 +1745,8 @@ components:
           $ref: '#/components/schemas/MinorPercentage'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
     VatCategory:
       type: object
       required:
@@ -1741,6 +1760,8 @@ components:
             $ref: '#/components/schemas/VatCategoryVersion'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
     PhoneNumber:
       type: string
       format: phone
@@ -2015,6 +2036,8 @@ components:
             - 'null'
           items:
             $ref: '#/components/schemas/ResourceCapacityOverrides'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
     Contact:
