@@ -844,6 +844,29 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Settings'
+  /api/v0/password:
+    post:
+      description: Update password for authenticated user
+      tags:
+        - Central
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+      responses:
+        '200':
+          description: Successfully updated the password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetResponse'
+        '401':
+          description: Unauthorized
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          description: Validation error
+          $ref: '#/components/responses/422UnprocessableEntity'
 components:
   securitySchemes:
     elderberryOAuth:
@@ -2196,6 +2219,38 @@ components:
           $ref: '#/components/schemas/Currency'
         timezone:
           $ref: '#/components/schemas/Timezone'
+    PasswordResetRequest:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+        - newPassword_confirmation
+      properties:
+        oldPassword:
+          type: string
+          description: The existing password
+          examples:
+            - theOldPassword
+        newPassword:
+          type: string
+          examples:
+            - theNewPassword
+        newPassword_confirmation:
+          type: string
+          description: Must be identical to newPassword
+          examples:
+            - theNewPassword
+    PasswordResetResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          examples:
+            - 200
+        message:
+          type: string
+          examples:
+            - Password updated
   responses:
     422UnprocessableEntity:
       description: Unprocessable entity error / validation error
@@ -2242,3 +2297,22 @@ components:
                 type: string
               status:
                 type: integer
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                examples:
+                  - Unauthorized.
+              status:
+                type: integer
+                examples:
+                  - 401
+              description:
+                type: string
+                examples:
+                  - Authorization failed.
