@@ -2083,15 +2083,21 @@ components:
           format: email
           examples:
             - ola.nordmann@example.com
+    GiftcardMessage:
+      type:
+        - string
+        - 'null'
+      examples:
+        - Happy birthday, here is a gift card for you!
+    GiftcardCode:
+      type: string
+      examples:
+        - 123-456-789
     NullableDatetime:
       type:
         - string
         - 'null'
       format: date-time
-    GiftcardCode:
-      type: string
-      examples:
-        - 123-456-789
     GiftcardUsage:
       type: object
       required:
@@ -2113,22 +2119,24 @@ components:
           $ref: '#/components/schemas/ULID'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+        contact:
+          $ref: '#/components/schemas/Contact'
         invoiceNumber:
           type:
             - integer
             - 'null'
-        contact:
-          $ref: '#/components/schemas/Contact'
         amount:
           $ref: '#/components/schemas/Amount'
         amountAvailable:
           $ref: '#/components/schemas/Amount'
-        expiresAt:
-          $ref: '#/components/schemas/NullableDatetime'
+        message:
+          $ref: '#/components/schemas/GiftcardMessage'
         code:
           $ref: '#/components/schemas/GiftcardCode'
         enabled:
           type: boolean
+        expiresAt:
+          $ref: '#/components/schemas/NullableDatetime'
         usages:
           type: array
           items:
@@ -2144,6 +2152,8 @@ components:
           $ref: '#/components/schemas/Contact'
         amountMinor:
           $ref: '#/components/schemas/MinorAmount'
+        message:
+          $ref: '#/components/schemas/GiftcardMessage'
         expiresAt:
           $ref: '#/components/schemas/NullableDatetime'
         code:
