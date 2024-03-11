@@ -342,6 +342,8 @@ paths:
         - $ref: '#/components/parameters/PageCursor'
         - $ref: '#/components/parameters/PerPage'
         - $ref: '#/components/parameters/TenantAlias'
+        - $ref: '#/components/parameters/Ids'
+        - $ref: '#/components/parameters/IncludeSoftDeleted'
       responses:
         '200':
           description: Successfully retrieved vat categories from the server
@@ -937,6 +939,24 @@ components:
         minimum: 0
         examples:
           - 3
+    Ids:
+      name: ids
+      description: The response will only contain records with these ids.
+      style: form
+      explode: false
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: ^[0-9]+$
+    IncludeSoftDeleted:
+      name: include_soft_deleted
+      in: query
+      description: Include soft deleted records
+      schema:
+        type: boolean
+        default: false
     VatCategoryId:
       name: vatCategory
       in: path
