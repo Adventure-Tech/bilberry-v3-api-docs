@@ -12,7 +12,7 @@ security:
 paths:
   /{tenant}/api/v0/products:
     get:
-      description: Returns paginated list of products
+      description: Returns paginated list of products. If called unauthenticated only published products are returned.
       tags:
         - Products API
       parameters:
@@ -846,6 +846,21 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Settings'
+  /{tenant}/api/v0/user/permissions:
+    get:
+      description: Returns all permissions for the user
+      tags:
+        - Authorization
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the users permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Permissions'
   /api/v0/password:
     post:
       description: Update password for authenticated user
@@ -2249,6 +2264,27 @@ components:
           $ref: '#/components/schemas/Currency'
         timezone:
           $ref: '#/components/schemas/Timezone'
+    Permissions:
+      type: object
+      properties:
+        role:
+          type: string
+          examples:
+            - user
+        permissions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+          example:
+            - name: product:read
+              description: Read product
+            - name: product:list
+              description: List all product
     PasswordResetRequest:
       type: object
       required:
