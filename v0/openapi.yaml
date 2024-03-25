@@ -812,6 +812,118 @@ paths:
           $ref: '#/components/responses/404NotFound'
         '409':
           $ref: '#/components/responses/409Conflict'
+  /{tenant}/api/v0/notifications:
+    get:
+      description: Returns paginated list of notifications.
+      tags:
+        - Notifications API
+      parameters:
+        - $ref: '#/components/parameters/PageCursor'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved notifications from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationResponse'
+                  links:
+                    $ref: '#/components/schemas/Links'
+    post:
+      description: Creates new notification
+      tags:
+        - Notifications API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationCreateRequest'
+      responses:
+        '201':
+          description: Successfully created new notification on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationResponse'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/notifications/{notification}:
+    get:
+      description: Returns a single notification based on its ID
+      tags:
+        - Notifications API
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the notification from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationResponse'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific notification based on its ID. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - Notifications API
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the notification on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationResponse'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Soft-delete a specific notification based on its ID
+      tags:
+        - Notifications API
+      parameters:
+        - $ref: '#/components/parameters/NotificationId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully soft-deleted the notification on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/invoices/{invoice}:
     get:
       description: Returns a single invoice based on its reference
@@ -1004,6 +1116,16 @@ components:
       description: The giftcard ID
       schema:
         $ref: '#/components/schemas/ULID'
+    NotificationId:
+      name: notification
+      in: path
+      required: true
+      description: The notification ID
+      schema:
+        type: integer
+        minimum: 0
+        examples:
+          - 1
     InvoiceRef:
       name: invoice
       in: path
@@ -2193,6 +2315,115 @@ components:
           $ref: '#/components/schemas/NullableDatetime'
         code:
           $ref: '#/components/schemas/GiftcardCode'
+    ConditionRule:
+      type: object
+      required:
+        - rule
+        - type
+      properties:
+        rule:
+          type: array
+        type:
+          type: string
+    Condition:
+      type: object
+      required:
+        - description
+        - rules
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        description:
+          type: string
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConditionRule'
+    Trigger:
+      type: object
+      required:
+        - eventType
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        eventType:
+          type: string
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+    Target:
+      type: object
+      required:
+        - description
+        - rules
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        description:
+          type: string
+        rules:
+          type: array
+    NotificationResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - name
+        - description
+        - active
+        - triggers
+        - targets
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        name:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+        triggers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trigger'
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Target'
+    NotificationCreateRequest:
+      type: object
+      required:
+        - name
+        - description
+        - active
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+        triggers:
+          type:
+            - array
+            - 'null'
+          items:
+            $ref: '#/components/schemas/Trigger'
+        targets:
+          type:
+            - array
+            - 'null'
+          items:
+            $ref: '#/components/schemas/Target'
     InvoiceShort:
       type:
         - object
