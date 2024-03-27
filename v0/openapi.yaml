@@ -1396,11 +1396,6 @@ components:
           $ref: '#/components/schemas/ReadOnlyDatetime'
     Address:
       type: object
-      required:
-        - address
-        - city
-        - postalCode
-        - country
       properties:
         address:
           type:
