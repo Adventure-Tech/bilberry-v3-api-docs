@@ -1348,8 +1348,6 @@ components:
       required:
         - questionFormulation
       properties:
-        id:
-          $ref: '#/components/schemas/Id'
         questionFormulation:
           type: string
     Question:
@@ -2310,19 +2308,11 @@ components:
           $ref: '#/components/schemas/NullableDatetime'
         code:
           $ref: '#/components/schemas/GiftcardCode'
-    ConditionRule:
+    ConditionResponse:
       type: object
       required:
-        - rule
-        - type
-      properties:
-        rule:
-          type: array
-        type:
-          type: string
-    Condition:
-      type: object
-      required:
+        - id
+        - createdAt
         - description
         - rules
       properties:
@@ -2333,13 +2323,14 @@ components:
         description:
           type: string
         rules:
-          type: array
-          items:
-            $ref: '#/components/schemas/ConditionRule'
-    Trigger:
+          type: string
+    TriggerResponse:
       type: object
       required:
+        - id
+        - createdAt
         - eventType
+        - conditions
       properties:
         id:
           $ref: '#/components/schemas/Id'
@@ -2348,12 +2339,16 @@ components:
         eventType:
           type: string
         conditions:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
-            $ref: '#/components/schemas/Condition'
-    Target:
+            $ref: '#/components/schemas/ConditionResponse'
+    TargetResponse:
       type: object
       required:
+        - id
+        - createdAt
         - description
         - rules
       properties:
@@ -2364,7 +2359,7 @@ components:
         description:
           type: string
         rules:
-          type: array
+          type: string
     NotificationResponse:
       type: object
       required:
@@ -2387,13 +2382,60 @@ components:
         active:
           type: boolean
         triggers:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
-            $ref: '#/components/schemas/Trigger'
+            $ref: '#/components/schemas/TriggerResponse'
         targets:
-          type: array
+          type:
+            - array
+            - 'null'
           items:
-            $ref: '#/components/schemas/Target'
+            $ref: '#/components/schemas/TargetResponse'
+    TargetCreateRequest:
+      type: object
+      required:
+        - description
+        - rule
+        - type
+      properties:
+        description:
+          type: string
+        type:
+          type: string
+        rule:
+          type: object
+    ConditionCreateRequest:
+      type: object
+      required:
+        - description
+        - type
+        - rule
+      properties:
+        description:
+          type: string
+        type:
+          type: string
+        rule:
+          type: object
+    TriggerCreateRequest:
+      type: object
+      required:
+        - eventType
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        eventType:
+          type: string
+        conditions:
+          type:
+            - array
+            - 'null'
+          items:
+            $ref: '#/components/schemas/ConditionCreateRequest'
     NotificationCreateRequest:
       type: object
       required:
@@ -2407,18 +2449,18 @@ components:
           type: string
         active:
           type: boolean
-        triggers:
-          type:
-            - array
-            - 'null'
-          items:
-            $ref: '#/components/schemas/Trigger'
         targets:
           type:
             - array
             - 'null'
           items:
-            $ref: '#/components/schemas/Target'
+            $ref: '#/components/schemas/TargetCreateRequest'
+        triggers:
+          type:
+            - array
+            - 'null'
+          items:
+            $ref: '#/components/schemas/TriggerCreateRequest'
     InvoiceShort:
       type:
         - object
