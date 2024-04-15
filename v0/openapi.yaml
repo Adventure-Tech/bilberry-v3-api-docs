@@ -973,6 +973,79 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/Permissions'
+  /api/v0/profile:
+    get:
+      description: Returns profile related information for the authenticated user
+      tags:
+        - Profile API
+      responses:
+        '200':
+          description: Successfully retrieved the profile information from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProfileResponse'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch user information for the authenticated user. This is inspired by the JSON patch syntax with some modifications such as custom operations and modified array referencing
+      tags:
+        - Profile API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the user on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProfileResponse'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Soft-deletes the authenticated user
+      tags:
+        - Profile API
+      responses:
+        '200':
+          description: Successfully soft-deleted the user on the server
+        '404':
+          $ref: '#/components/responses/404NotFound'
+  /api/v0/profile/password:
+    post:
+      description: Update password for authenticated user
+      tags:
+        - Profile API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+      responses:
+        '200':
+          description: Successfully updated the password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetResponse'
+        '422':
+          description: Validation error
+          $ref: '#/components/responses/422UnprocessableEntity'
   /api/v0/password:
     post:
       description: Update password for authenticated user
@@ -2553,6 +2626,84 @@ components:
               description: Read product
             - name: product:list
               description: List all product
+    Email:
+      type: string
+      format: email
+      examples:
+        - john.doe@bilberry.no
+    PhoneNumberNullable:
+      type:
+        - string
+        - 'null'
+      format: phone
+      examples:
+        - +47 12345678
+    Image:
+      type:
+        - string
+        - 'null'
+      format: uri
+      examples:
+        - https://example.com/image.jpg
+    SimpleTenantResponse:
+      type: object
+      required:
+        - id
+        - name
+        - aliases
+        - currentAlias
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        aliases:
+          type: array
+          items:
+            type: string
+        currentAlias:
+          type: string
+    ProfileResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - fullName
+        - displayName
+        - email
+        - phone
+        - image
+        - access
+        - permissions
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        fullName:
+          type: string
+          examples:
+            - John Doe
+        displayName:
+          type: string
+          description: The name that will be displayed to other users
+          examples:
+            - John
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/PhoneNumberNullable'
+        image:
+          $ref: '#/components/schemas/Image'
+        passwordChangedAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        access:
+          $ref: '#/components/schemas/SimpleTenantResponse'
+        permissions:
+          description: Permissions for the user (not implemented yet)
+          type:
+            - array
+            - 'null'
     PasswordResetRequest:
       type: object
       required:
