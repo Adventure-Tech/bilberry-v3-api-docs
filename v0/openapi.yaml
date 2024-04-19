@@ -1277,14 +1277,21 @@ components:
           type: integer
           default: 1
           minimum: 1
-    TicketOption:
+    TicketOptionTranslation:
       type: object
       required:
         - name
+      properties:
+        name:
+          type: string
+    TicketOption:
+      type: object
+      required:
         - minAge
         - maxAge
         - vatModelId
         - resourceRequirements
+        - translations
       properties:
         id:
           $ref: '#/components/schemas/Id'
@@ -1302,6 +1309,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceRequirement'
+        translations:
+          type:
+            - object
+            - 'null'
+          properties: {}
+          propertyNames:
+            pattern: ^[a-z]{2}-[A-Z]{2}$
+            description: The locale of the translation, e.g. "en-US"
+          additionalProperties:
+            $ref: '#/components/schemas/TicketOptionTranslation'
+          examples:
+            - en-US:
+                id: 1
+                name: Adult
+            - nb-NO:
+                id: 2
+                name: Voksen
         vatModelId:
           $ref: '#/components/schemas/IdWritable'
     MinorAmount:
