@@ -4,8 +4,8 @@ info:
   description: The public and internal API of Bilberry v3
   version: 0.0.0
 servers:
-  - url: https://bilberry.app
-  - url: https://www.bilberry.app
+  - url: https://base.bilberry.app
+  - url: https://www.base.bilberry.app
 security:
   - elderberryOAuth:
       - admin
@@ -2678,7 +2678,7 @@ components:
         - currentAlias
       properties:
         id:
-          $ref: '#/components/schemas/Id'
+          $ref: '#/components/schemas/UUID'
         name:
           type: string
         aliases:
@@ -2687,6 +2687,54 @@ components:
             type: string
         currentAlias:
           type: string
+    DateFormat:
+      type:
+        - string
+        - 'null'
+      enum:
+        - dd.mm.yyyy
+        - yyyy.mm.dd
+        - mm.dd.yyyy
+    ClockDisplayFormat:
+      type:
+        - string
+        - 'null'
+      enum:
+        - TWELVE_HOURS
+        - TWENTY_FOUR_HOURS
+      examples:
+        - TWELVE_HOURS
+        - TWENTY_FOUR_HOURS
+    ThousandsSeparator:
+      type:
+        - string
+        - 'null'
+      enum:
+        - COMMA
+        - DOT
+        - SPACE
+    DecimalSeparator:
+      type:
+        - string
+        - 'null'
+      enum:
+        - COMMA
+        - DOT
+    UserPreferenceResponse:
+      type: object
+      required:
+        - lang
+      properties:
+        lang:
+          $ref: '#/components/schemas/Locale'
+        dateFormat:
+          $ref: '#/components/schemas/DateFormat'
+        clockDisplayFormat:
+          $ref: '#/components/schemas/ClockDisplayFormat'
+        thousandsSeparator:
+          $ref: '#/components/schemas/ThousandsSeparator'
+        decimalSeparator:
+          $ref: '#/components/schemas/DecimalSeparator'
     ProfileResponse:
       type: object
       required:
@@ -2699,6 +2747,7 @@ components:
         - image
         - access
         - permissions
+        - preferences
       properties:
         id:
           $ref: '#/components/schemas/Id'
@@ -2720,14 +2769,18 @@ components:
         image:
           $ref: '#/components/schemas/Image'
         passwordChangedAt:
-          $ref: '#/components/schemas/ReadOnlyDatetime'
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
         access:
-          $ref: '#/components/schemas/SimpleTenantResponse'
+          type: array
+          items:
+            $ref: '#/components/schemas/SimpleTenantResponse'
         permissions:
           description: Permissions for the user (not implemented yet)
           type:
             - array
             - 'null'
+        preferences:
+          $ref: '#/components/schemas/UserPreferenceResponse'
     PasswordResetRequest:
       type: object
       required:
