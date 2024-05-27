@@ -808,10 +808,10 @@ paths:
       responses:
         '200':
           description: Successfully cancelled the giftcard on the server
+        '400':
+          $ref: '#/components/responses/400BadRequest'
         '404':
           $ref: '#/components/responses/404NotFound'
-        '409':
-          $ref: '#/components/responses/409Conflict'
   /{tenant}/api/v0/notifications:
     get:
       description: Returns paginated list of notifications.
@@ -2828,7 +2828,7 @@ components:
               details:
                 type: object
                 properties: {}
-              status:
+              httpStatusCode:
                 type: integer
     404NotFound:
       description: Not found error
@@ -2839,15 +2839,10 @@ components:
             properties:
               message:
                 type: string
-              description:
-                type: string
-              details:
-                type: object
-                properties: {}
-              status:
+              httpStatusCode:
                 type: integer
-    409Conflict:
-      description: The request could not be completed due to a conflict with the current state of the target resource.
+    400BadRequest:
+      description: Bad request
       content:
         application/json:
           schema:
@@ -2855,10 +2850,12 @@ components:
             properties:
               message:
                 type: string
-              description:
-                type: string
-              status:
+                examples:
+                  - Bad request.
+              httpStatusCode:
                 type: integer
+                examples:
+                  - 400
     401Unauthorized:
       description: Unauthorized
       content:
@@ -2870,11 +2867,7 @@ components:
                 type: string
                 examples:
                   - Unauthorized.
-              status:
+              httpStatusCode:
                 type: integer
                 examples:
                   - 401
-              description:
-                type: string
-                examples:
-                  - Authorization failed.
