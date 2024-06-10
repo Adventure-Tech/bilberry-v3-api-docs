@@ -990,6 +990,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/ProfileResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
         '404':
           $ref: '#/components/responses/404NotFound'
     patch:
@@ -1015,6 +1017,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/ProfileResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
     delete:
@@ -1024,8 +1028,47 @@ paths:
       responses:
         '200':
           description: Successfully soft-deleted the user on the server
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
         '404':
           $ref: '#/components/responses/404NotFound'
+  /api/v0/profile/avatar:
+    post:
+      description: Uploads a new avatar for the authenticated user
+      tags:
+        - Profile API
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadUserAvatarRequest'
+      responses:
+        '201':
+          description: Successfully uploaded image to the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UploadedMediaResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Deletes the avatar for the authenticated user
+      tags:
+        - Profile API
+      responses:
+        '200':
+          description: Successfully deleted image on the server
+        '204':
+          $ref: '#/components/responses/204NoContent'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
   /api/v0/profile/password:
     post:
       description: Update password for authenticated user
@@ -2662,13 +2705,45 @@ components:
       format: phone
       examples:
         - +47 12345678
-    Image:
+    UploadedMediaResponse:
       type:
-        - string
+        - object
         - 'null'
-      format: uri
-      examples:
-        - https://example.com/image.jpg
+      required:
+        - id
+        - name
+        - mimeType
+        - size
+        - signedUrl
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - 9fHZg02R71YJF29HJCGnd4zjBhBwvb0XfurUCiI9.png
+        description:
+          type:
+            - string
+            - 'null'
+          examples:
+            - A picture of a cat
+        mimeType:
+          type: string
+          examples:
+            - image/png
+        size:
+          type: integer
+          examples:
+            - 409623
+        signedUrl:
+          type: string
+          format: url
+          examples:
+            - https://bilberry.b-cdn.net/central/images/user_avatars/5ZvoEQWq6avx89nQEMvDK8OGe4cMoM6BLuKQU3Fs.png?token=mGotfGPT1VD0rJcSLkN-Ig&expires=171440088
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
     SimpleTenantResponse:
       type: object
       required:
@@ -2744,7 +2819,7 @@ components:
         - displayName
         - email
         - phone
-        - image
+        - avatar
         - access
         - permissions
         - preferences
@@ -2766,8 +2841,8 @@ components:
           $ref: '#/components/schemas/Email'
         phone:
           $ref: '#/components/schemas/PhoneNumberNullable'
-        image:
-          $ref: '#/components/schemas/Image'
+        avatar:
+          $ref: '#/components/schemas/UploadedMediaResponse'
         passwordChangedAt:
           $ref: '#/components/schemas/NullableReadOnlyDatetime'
         access:
@@ -2781,6 +2856,19 @@ components:
             - 'null'
         preferences:
           $ref: '#/components/schemas/UserPreferenceResponse'
+    File:
+      type: string
+      format: binary
+      description: The file to upload
+    UploadUserAvatarRequest:
+      type: object
+      required:
+        - file
+      properties:
+        file:
+          $ref: '#/components/schemas/File'
+        description:
+          type: string
     PasswordResetRequest:
       type: object
       required:
@@ -2828,8 +2916,10 @@ components:
               details:
                 type: object
                 properties: {}
-              httpStatusCode:
+              status:
                 type: integer
+                examples:
+                  - 422
     404NotFound:
       description: Not found error
       content:
@@ -2839,8 +2929,10 @@ components:
             properties:
               message:
                 type: string
-              httpStatusCode:
+              status:
                 type: integer
+                examples:
+                  - 404
     400BadRequest:
       description: Bad request
       content:
@@ -2852,12 +2944,12 @@ components:
                 type: string
                 examples:
                   - Bad request.
-              httpStatusCode:
+              status:
                 type: integer
                 examples:
                   - 400
     401Unauthorized:
-      description: Unauthorized
+      description: Unauthorized. Request lacks valid authentication credentials.
       content:
         application/json:
           schema:
@@ -2867,7 +2959,21 @@ components:
                 type: string
                 examples:
                   - Unauthorized.
-              httpStatusCode:
+              status:
                 type: integer
                 examples:
                   - 401
+    204NoContent:
+      description: No content response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Request has succeeded, but the client doesn't need to navigate away from its current page
+              status:
+                type: integer
+                examples:
+                  - 204
