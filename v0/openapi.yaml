@@ -223,6 +223,34 @@ paths:
                       $ref: '#/components/schemas/Bookable'
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/products/{product}/upload:
+    post:
+      description: Uploads new image for product
+      tags:
+        - Products API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadProductImageRequest'
+      responses:
+        '201':
+          description: Successfully uploaded image to the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProductMedia'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/vat-models:
     get:
       description: Returns paginated list of vat models
@@ -1426,6 +1454,42 @@ components:
             - string
             - 'null'
           format: url
+    ProductMedia:
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - mimeType
+        - size
+        - signedUrl
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - 9fHZg02R71YJF29HJCGnd4zjBhBwvb0XfurUCiI9.png
+        description:
+          type: string
+          examples:
+            - A picture of a cat
+        mimeType:
+          type: string
+          examples:
+            - image/png
+        size:
+          type: integer
+          examples:
+            - 409623
+        signedUrl:
+          type: string
+          format: uri
+          examples:
+            - https://bilberry.b-cdn.net/tenants/175e27d0-a84e-4ed6-b8ef-45a78bd9fdd1/images/product_images/9fHZg02R71YJF29HJCGnd4zjBhBwvb0XfurUCiI9.png?token=mGotfGPT1VD0rJcSLkN-Ig&expires=171440088
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
     WidgetInfo:
       type:
         - object
@@ -1483,6 +1547,10 @@ components:
                 additionalInfo: Ikke for personer med høydeskrekk
                 termsAndConditions: tldr
                 url: https://awesome.climbing.no/no/3-hour-tree-climbing
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductMedia'
     QuestionTranslation:
       type: object
       required:
@@ -1936,6 +2004,20 @@ components:
       oneOf:
         - $ref: '#/components/schemas/NonTimeslotBookable'
         - $ref: '#/components/schemas/TimeslotBookable'
+    File:
+      type: string
+      format: binary
+      description: The file to upload
+    UploadProductImageRequest:
+      type: object
+      required:
+        - file
+        - description
+      properties:
+        file:
+          $ref: '#/components/schemas/File'
+        description:
+          type: string
     ValidFrom:
       type: string
       format: date-time
@@ -2698,6 +2780,13 @@ components:
       format: email
       examples:
         - john.doe@bilberry.no
+    EmailPending:
+      type:
+        - string
+        - 'null'
+      format: email
+      examples:
+        - john.temp.doe@bilberry.no
     PhoneNumberNullable:
       type:
         - string
@@ -2839,6 +2928,9 @@ components:
             - John
         email:
           $ref: '#/components/schemas/Email'
+        pendingNewEmail:
+          description: Temporary email address for email change. Will be null if no email change is in progress.
+          $ref: '#/components/schemas/EmailPending'
         phone:
           $ref: '#/components/schemas/PhoneNumberNullable'
         avatar:
@@ -2856,10 +2948,6 @@ components:
             - 'null'
         preferences:
           $ref: '#/components/schemas/UserPreferenceResponse'
-    File:
-      type: string
-      format: binary
-      description: The file to upload
     UploadUserAvatarRequest:
       type: object
       required:
@@ -2933,21 +3021,6 @@ components:
                 type: integer
                 examples:
                   - 404
-    400BadRequest:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                examples:
-                  - Bad request.
-              status:
-                type: integer
-                examples:
-                  - 400
     401Unauthorized:
       description: Unauthorized. Request lacks valid authentication credentials.
       content:
@@ -2963,6 +3036,21 @@ components:
                 type: integer
                 examples:
                   - 401
+    400BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                examples:
+                  - Bad request.
+              status:
+                type: integer
+                examples:
+                  - 400
     204NoContent:
       description: No content response
       content:
