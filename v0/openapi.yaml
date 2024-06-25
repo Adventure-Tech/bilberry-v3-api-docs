@@ -253,12 +253,10 @@ paths:
           $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/vat-models:
     get:
-      description: Returns paginated list of vat models
+      description: Returns a list of all vat models
       tags:
         - VAT API
       parameters:
-        - $ref: '#/components/parameters/PageCursor'
-        - $ref: '#/components/parameters/PerPage'
         - $ref: '#/components/parameters/TenantAlias'
       responses:
         '200':
@@ -272,8 +270,6 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/VatModel'
-                  links:
-                    $ref: '#/components/schemas/Links'
     post:
       description: Creates new vat model
       tags:
@@ -284,7 +280,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/VatModel'
+              $ref: '#/components/schemas/DeprecatedVatModel'
       responses:
         '201':
           description: Successfully created new vat model on the server
@@ -296,7 +292,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: '#/components/schemas/VatModel'
+                    $ref: '#/components/schemas/DeprecatedVatModel'
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/vat-models/{vatModel}:
@@ -346,7 +342,7 @@ paths:
                   - data
                 properties:
                   data:
-                    $ref: '#/components/schemas/VatModel'
+                    $ref: '#/components/schemas/DeprecatedVatModel'
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
     delete:
@@ -2021,30 +2017,51 @@ components:
     ValidFrom:
       type: string
       format: date-time
-    DefaultVatRule:
+    StandardVatModelVersion:
       type: object
       required:
-        - description
-        - vatCategoryId
+        - id
+        - validFrom
+        - percentageMinor
       properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
+        percentageMinor:
+          $ref: '#/components/schemas/MinorPercentage'
         description:
           type: string
-        vatCategoryId:
-          $ref: '#/components/schemas/IdWritable'
+        account:
+          type: string
+    StandardVatModel:
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        type:
+          type: string
+          enum:
+            - STANDARD
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardVatModelVersion'
     AmountBasedVatRule:
       type: object
       required:
         - description
-        - vatCategoryId
+        - standardVatRuleId
         - amountMinor
       properties:
-        id:
-          $ref: '#/components/schemas/Id'
         description:
           type: string
         amountMinor:
           $ref: '#/components/schemas/MinorAmount'
-        vatCategoryId:
+        standardVatRuleId:
           $ref: '#/components/schemas/IdWritable'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
@@ -2054,43 +2071,67 @@ components:
       type: object
       required:
         - description
-        - vatCategoryId
+        - standardVatRuleId
         - percentageMinor
       properties:
-        id:
-          $ref: '#/components/schemas/Id'
         description:
           type: string
         percentageMinor:
           $ref: '#/components/schemas/MinorPercentage'
-        vatCategoryId:
+        standardVatRuleId:
           $ref: '#/components/schemas/IdWritable'
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
         deletedAt:
           $ref: '#/components/schemas/NullableReadOnlyDatetime'
-    VatRule:
+    ComplexVatModelVersion:
       type: object
       required:
-        - default
+        - id
+        - validFrom
+        - rules
       properties:
-        default:
-          $ref: '#/components/schemas/DefaultVatRule'
-        amountBased:
-          type:
-            - array
-            - 'null'
+        id:
+          $ref: '#/components/schemas/Id'
+        validFrom:
+          $ref: '#/components/schemas/ValidFrom'
+        rules:
+          type: object
+          required: []
+          properties:
+            amountBased:
+              type:
+                - array
+                - 'null'
+              items:
+                $ref: '#/components/schemas/AmountBasedVatRule'
+            percentageBased:
+              type:
+                - array
+                - 'null'
+              items:
+                $ref: '#/components/schemas/PercentageBasedVatRule'
+    ComplexVatModel:
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        type:
+          type: string
+          enum:
+            - COMPLEX
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        deletedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
+        versions:
+          type: array
           items:
-            allOf:
-              - $ref: '#/components/schemas/AmountBasedVatRule'
-        percentageBased:
-          type:
-            - array
-            - 'null'
-          items:
-            allOf:
-              - $ref: '#/components/schemas/PercentageBasedVatRule'
+            $ref: '#/components/schemas/ComplexVatModelVersion'
     VatModel:
+      oneOf:
+        - $ref: '#/components/schemas/StandardVatModel'
+        - $ref: '#/components/schemas/ComplexVatModel'
+    DeprecatedVatModel:
       type: object
       required:
         - versions
@@ -2111,7 +2152,53 @@ components:
               validFrom:
                 $ref: '#/components/schemas/ValidFrom'
               rules:
-                $ref: '#/components/schemas/VatRule'
+                type: object
+                required: []
+                properties:
+                  default:
+                    type: object
+                  amountBased:
+                    type:
+                      - array
+                      - 'null'
+                    items:
+                      type: object
+                      required:
+                        - description
+                        - vatCategoryId
+                        - amountMinor
+                      properties:
+                        description:
+                          type: string
+                        amountMinor:
+                          $ref: '#/components/schemas/MinorAmount'
+                        vatCategoryId:
+                          $ref: '#/components/schemas/IdWritable'
+                        createdAt:
+                          $ref: '#/components/schemas/ReadOnlyDatetime'
+                        deletedAt:
+                          $ref: '#/components/schemas/NullableReadOnlyDatetime'
+                  percentageBased:
+                    type:
+                      - array
+                      - 'null'
+                    items:
+                      type: object
+                      required:
+                        - description
+                        - vatCategoryId
+                        - percentageMinor
+                      properties:
+                        description:
+                          type: string
+                        percentageMinor:
+                          $ref: '#/components/schemas/MinorPercentage'
+                        vatCategoryId:
+                          $ref: '#/components/schemas/IdWritable'
+                        createdAt:
+                          $ref: '#/components/schemas/ReadOnlyDatetime'
+                        deletedAt:
+                          $ref: '#/components/schemas/NullableReadOnlyDatetime'
     Datetime:
       type: string
       format: date-time
