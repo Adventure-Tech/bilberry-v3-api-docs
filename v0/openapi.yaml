@@ -1113,29 +1113,6 @@ paths:
         '422':
           description: Validation error
           $ref: '#/components/responses/422UnprocessableEntity'
-  /api/v0/password:
-    post:
-      description: Update password for authenticated user
-      tags:
-        - Central
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PasswordResetRequest'
-      responses:
-        '200':
-          description: Successfully updated the password
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PasswordResetResponse'
-        '401':
-          description: Unauthorized
-          $ref: '#/components/responses/401Unauthorized'
-        '422':
-          description: Validation error
-          $ref: '#/components/responses/422UnprocessableEntity'
 components:
   securitySchemes:
     elderberryOAuth:
