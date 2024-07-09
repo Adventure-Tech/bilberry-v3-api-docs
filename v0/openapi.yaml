@@ -982,6 +982,23 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Settings'
+  /{tenant}/api/v0/users/{user}:
+    delete:
+      description: Remove a specific user from a tenant based on its ID
+      tags:
+        - Users API
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully deleted the user from the tenant
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
   /{tenant}/api/v0/user/permissions:
     get:
       description: Returns all permissions for the user
@@ -1046,7 +1063,7 @@ paths:
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
     delete:
-      description: Soft-deletes the authenticated user
+      description: Soft-deletes the user (NOT IMPLEMENTED YET)
       tags:
         - Profile API
       responses:
@@ -1253,6 +1270,16 @@ components:
         minimum: 0
         examples:
           - '100427'
+    UserId:
+      name: user
+      in: path
+      required: true
+      description: The User ID
+      schema:
+        type: integer
+        minimum: 0
+        examples:
+          - 1
   schemas:
     Id:
       type: integer
@@ -3115,6 +3142,19 @@ components:
                 type: integer
                 examples:
                   - 400
+    403Forbidden:
+      description: Forbidden error. The user does not have permission to access the resource (Unauthorized)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              status:
+                type: integer
+                examples:
+                  - 403
     204NoContent:
       description: No content response
       content:
