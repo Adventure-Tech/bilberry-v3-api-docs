@@ -1014,6 +1014,27 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/Permissions'
+  /{tenant}/api/v0/roles:
+    get:
+      description: Returns list of roles.
+      tags:
+        - Roles API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved roles from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
   /api/v0/profile:
     get:
       description: Returns profile related information for the authenticated user
@@ -2866,6 +2887,40 @@ components:
               description: Read product
             - name: product:list
               description: List all product
+    Permission:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - product:read
+        description:
+          type: string
+          examples:
+            - Read product
+    Role:
+      type: object
+      required:
+        - id
+        - name
+        - permissions
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - user
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
     Email:
       type: string
       format: email
