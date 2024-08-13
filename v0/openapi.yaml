@@ -999,21 +999,40 @@ paths:
           $ref: '#/components/responses/403Forbidden'
         '404':
           $ref: '#/components/responses/404NotFound'
-  /{tenant}/api/v0/user/permissions:
-    get:
-      description: Returns all permissions for the user
+    patch:
+      description: Patch user information for a specific user in a tenant based on its ID.
       tags:
-        - Authorization
+        - Users API
       parameters:
+        - $ref: '#/components/parameters/UserId'
         - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
       responses:
         '200':
-          description: Successfully retrieved the users permissions
+          description: Successfully updated the user on the server
           content:
             application/json:
               schema:
                 type: object
-                $ref: '#/components/schemas/Permissions'
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
   /{tenant}/api/v0/roles:
     get:
       description: Returns list of roles.
@@ -2866,27 +2885,18 @@ components:
           $ref: '#/components/schemas/Currency'
         timezone:
           $ref: '#/components/schemas/Timezone'
-    Permissions:
-      type: object
-      properties:
-        role:
-          type: string
-          examples:
-            - user
-        permissions:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              description:
-                type: string
-          example:
-            - name: product:read
-              description: Read product
-            - name: product:list
-              description: List all product
+    Email:
+      type: string
+      format: email
+      examples:
+        - john.doe@bilberry.no
+    PhoneNumberNullable:
+      type:
+        - string
+        - 'null'
+      format: phone
+      examples:
+        - +47 12345678
     Permission:
       type: object
       required:
@@ -2921,11 +2931,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
-    Email:
-      type: string
-      format: email
-      examples:
-        - john.doe@bilberry.no
+    UserResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - fullName
+        - displayName
+        - email
+        - phone
+        - role
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        fullName:
+          type: string
+          examples:
+            - John Doe
+        displayName:
+          type: string
+          examples:
+            - John
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/PhoneNumberNullable'
+        role:
+          $ref: '#/components/schemas/Role'
     EmailPending:
       type:
         - string
@@ -2933,13 +2967,6 @@ components:
       format: email
       examples:
         - john.temp.doe@bilberry.no
-    PhoneNumberNullable:
-      type:
-        - string
-        - 'null'
-      format: phone
-      examples:
-        - +47 12345678
     UploadedMediaResponse:
       type:
         - object
