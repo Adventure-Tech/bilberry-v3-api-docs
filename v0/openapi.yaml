@@ -1427,7 +1427,7 @@ components:
           properties: {}
           propertyNames:
             pattern: ^[a-z]{2}-[A-Z]{2}$
-            description: The locale of the translation, e.g. "en-US"
+            description: The lang parameter of the translation, e.g. "en-US"
           additionalProperties:
             $ref: '#/components/schemas/TicketOptionTranslation'
           examples:
@@ -1569,7 +1569,7 @@ components:
           properties: {}
           propertyNames:
             pattern: ^[a-z]{2}-[A-Z]{2}$
-            description: The locale of the translation, e.g. "en-US"
+            description: The lang parameter of the translation, e.g. "en-US"
           additionalProperties:
             $ref: '#/components/schemas/WidgetInfoTranslation'
           examples:
@@ -1628,7 +1628,7 @@ components:
           properties: {}
           propertyNames:
             pattern: ^[a-z]{2}-[A-Z]{2}$
-            description: The locale of the translation, e.g. "en-US"
+            description: The lang parameter of the translation, e.g. "en-US"
           additionalProperties:
             $ref: '#/components/schemas/QuestionTranslation'
           examples:
@@ -2300,7 +2300,7 @@ components:
         - 01F8MECHZX3TBDSZ7XR8H8JHAF
       pattern: ^[0-7][0-9A-HJKMNP-TV-Z]{25}$
       readOnly: true
-    Locale:
+    LangParameter:
       type: string
       examples:
         - nb-NO
@@ -2313,7 +2313,7 @@ components:
             - lastName
             - email
             - phone
-            - locale
+            - lang
           properties:
             firstName:
               type:
@@ -2332,9 +2332,9 @@ components:
               oneOf:
                 - $ref: '#/components/schemas/PhoneNumber'
                 - type: 'null'
-            locale:
+            lang:
               oneOf:
-                - $ref: '#/components/schemas/Locale'
+                - $ref: '#/components/schemas/LangParameter'
                 - type: 'null'
         - $ref: '#/components/schemas/Address'
     Ticket:
@@ -2885,6 +2885,10 @@ components:
           $ref: '#/components/schemas/Currency'
         timezone:
           $ref: '#/components/schemas/Timezone'
+        contentLanguages:
+          type: array
+          items:
+            $ref: '#/components/schemas/LangParameter'
     Email:
       type: string
       format: email
@@ -3066,7 +3070,7 @@ components:
         - lang
       properties:
         lang:
-          $ref: '#/components/schemas/Locale'
+          $ref: '#/components/schemas/LangParameter'
         dateFormat:
           $ref: '#/components/schemas/DateFormat'
         clockDisplayFormat:
