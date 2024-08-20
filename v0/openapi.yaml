@@ -1170,6 +1170,107 @@ paths:
         '422':
           description: Validation error
           $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/user-invites:
+    get:
+      description: Returns a list of all user invites
+      tags:
+        - UserInvite API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved user invites from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserInvite'
+    post:
+      description: Issues new user invite
+      tags:
+        - UserInvite API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueInviteRequest'
+      responses:
+        '201':
+          description: Successfully issued user invite
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/user-invites/{userInvite}:
+    get:
+      description: Returns a single user invite based on its ULID
+      tags:
+        - UserInvite API
+      parameters:
+        - $ref: '#/components/parameters/UserInviteId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the user invite from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserInvite'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+    patch:
+      description: Patch a specific vat model based on its ID.
+      tags:
+        - UserInvite API
+      parameters:
+        - $ref: '#/components/parameters/UserInviteId'
+        - $ref: '#/components/parameters/TenantAlias'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PatchObject'
+      responses:
+        '200':
+          description: Successfully updated the user invite on the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserInvite'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntity'
+    delete:
+      description: Delete a user invite based on its ID
+      tags:
+        - UserInvite API
+      parameters:
+        - $ref: '#/components/parameters/UserInviteId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully deleted the user invite
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
 components:
   securitySchemes:
     elderberryOAuth:
@@ -1320,6 +1421,13 @@ components:
         minimum: 0
         examples:
           - 1
+    UserInviteId:
+      name: userInvite
+      in: path
+      required: true
+      description: The user invite ID
+      schema:
+        $ref: '#/components/schemas/ULID'
   schemas:
     Id:
       type: integer
@@ -3169,6 +3277,45 @@ components:
           type: string
           examples:
             - Password updated
+    UserInvite:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ULID'
+        userEmail:
+          $ref: '#/components/schemas/Email'
+        tenantName:
+          type:
+            - string
+        inviteStatus:
+          type:
+            - string
+        inviteUrl:
+          type:
+            - string
+        role:
+          type:
+            - string
+        expiresAt:
+          $ref: '#/components/schemas/NullableDatetime'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+    IssueInviteRequest:
+      type: object
+      required:
+        - email
+        - role
+      properties:
+        email:
+          type: string
+          description: The email that the invites is issued to
+          examples:
+            - newuser@bilberry.no
+        role:
+          type: string
+          description: Role given to the new user
+          examples:
+            - admin
   responses:
     422UnprocessableEntity:
       description: Unprocessable entity error / validation error
