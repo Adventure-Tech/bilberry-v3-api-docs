@@ -230,6 +230,7 @@ paths:
         - Products API
       parameters:
         - $ref: '#/components/parameters/TenantAlias'
+        - $ref: '#/components/parameters/ProductId'
       requestBody:
         content:
           multipart/form-data:
@@ -251,6 +252,23 @@ paths:
           $ref: '#/components/responses/401Unauthorized'
         '422':
           $ref: '#/components/responses/422UnprocessableEntity'
+  /{tenant}/api/v0/products/{product}/media/{media}:
+    delete:
+      summary: Delete product media
+      operationId: deleteProductMedia
+      tags:
+        - Products API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+        - $ref: '#/components/parameters/ProductId'
+        - $ref: '#/components/parameters/MediaId'
+      responses:
+        '200':
+          description: Successfully deleted product media
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          description: Product or media not found
   /{tenant}/api/v0/vat-models:
     get:
       description: Returns a list of all vat models
@@ -1331,6 +1349,13 @@ components:
       schema:
         type: string
         format: date-time
+    MediaId:
+      name: media
+      in: path
+      required: true
+      schema:
+        type: integer
+      description: Unique identifier of the media
     VatModelId:
       name: vatModel
       in: path
