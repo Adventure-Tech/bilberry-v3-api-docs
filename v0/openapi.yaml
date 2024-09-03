@@ -1001,6 +1001,31 @@ paths:
                   data:
                     $ref: '#/components/schemas/Settings'
   /{tenant}/api/v0/users/{user}:
+    get:
+      description: Returns a single user based on its ID
+      tags:
+        - Users API
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved the user from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          $ref: '#/components/responses/404NotFound'
     delete:
       description: Remove a specific user from a tenant based on its ID
       tags:
@@ -1465,6 +1490,8 @@ components:
       type: string
       format: date-time
       readOnly: true
+      examples:
+        - '2024-08-15T10:21:49+02:00'
     ProductStatus:
       type: string
       enum:
@@ -3034,76 +3061,6 @@ components:
       format: phone
       examples:
         - +47 12345678
-    Permission:
-      type: object
-      required:
-        - id
-        - name
-        - description
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        name:
-          type: string
-          examples:
-            - product:read
-        description:
-          type: string
-          examples:
-            - Read product
-    Role:
-      type: object
-      required:
-        - id
-        - name
-        - permissions
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        name:
-          type: string
-          examples:
-            - user
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-    UserResponse:
-      type: object
-      required:
-        - id
-        - createdAt
-        - fullName
-        - displayName
-        - email
-        - phone
-        - role
-      properties:
-        id:
-          $ref: '#/components/schemas/Id'
-        createdAt:
-          $ref: '#/components/schemas/ReadOnlyDatetime'
-        fullName:
-          type: string
-          examples:
-            - John Doe
-        displayName:
-          type: string
-          examples:
-            - John
-        email:
-          $ref: '#/components/schemas/Email'
-        phone:
-          $ref: '#/components/schemas/PhoneNumberNullable'
-        role:
-          $ref: '#/components/schemas/Role'
-    EmailPending:
-      type:
-        - string
-        - 'null'
-      format: email
-      examples:
-        - john.temp.doe@bilberry.no
     UploadedMediaResponse:
       type:
         - object
@@ -3143,6 +3100,129 @@ components:
             - https://bilberry.b-cdn.net/central/images/user_avatars/5ZvoEQWq6avx89nQEMvDK8OGe4cMoM6BLuKQU3Fs.png?token=mGotfGPT1VD0rJcSLkN-Ig&expires=171440088
         createdAt:
           $ref: '#/components/schemas/ReadOnlyDatetime'
+    Security:
+      type: object
+      required:
+        - passwordChangedAt
+        - passwordStrength
+        - 2FA
+      properties:
+        passwordStrength:
+          type: string
+          examples:
+            - strong
+        passwordChangedAt:
+          $ref: '#/components/schemas/NullableReadOnlyDatetime'
+        2FA:
+          type: boolean
+          examples:
+            - true
+    UserStatus:
+      type:
+        - string
+        - 'null'
+      enum:
+        - ACTIVE
+        - PENDING_REQUEST
+        - EMAIL_BOUNCED
+        - INVITE_EXPIRED
+    Permission:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - product:read
+        description:
+          type: string
+          examples:
+            - Read product
+    Role:
+      type: object
+      required:
+        - id
+        - name
+        - permissions
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          examples:
+            - user
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    TenantAccess:
+      type: object
+      required:
+        - id
+        - name
+        - currentAlias
+        - status
+        - role
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: string
+        currentAlias:
+          type: string
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        role:
+          $ref: '#/components/schemas/Role'
+    UserResponse:
+      type: object
+      required:
+        - id
+        - createdAt
+        - fullName
+        - displayName
+        - email
+        - phone
+        - avatar
+        - security
+        - access
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          $ref: '#/components/schemas/ReadOnlyDatetime'
+        fullName:
+          type: string
+          examples:
+            - John Doe
+        displayName:
+          type: string
+          examples:
+            - John
+        email:
+          $ref: '#/components/schemas/Email'
+        phone:
+          $ref: '#/components/schemas/PhoneNumberNullable'
+        avatar:
+          $ref: '#/components/schemas/UploadedMediaResponse'
+        security:
+          $ref: '#/components/schemas/Security'
+        access:
+          type: array
+          items:
+            $ref: '#/components/schemas/TenantAccess'
+    EmailPending:
+      type:
+        - string
+        - 'null'
+      format: email
+      examples:
+        - john.temp.doe@bilberry.no
     SimpleTenantResponse:
       type: object
       required:
@@ -3223,7 +3303,6 @@ components:
         - phone
         - avatar
         - access
-        - permissions
         - preferences
       properties:
         id:
@@ -3254,11 +3333,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SimpleTenantResponse'
-        permissions:
-          description: Permissions for the user (not implemented yet)
-          type:
-            - array
-            - 'null'
         preferences:
           $ref: '#/components/schemas/UserPreferenceResponse'
     UploadUserAvatarRequest:
