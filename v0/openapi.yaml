@@ -3249,9 +3249,11 @@ components:
         - string
         - 'null'
       enum:
+        - dd-mm-yyyy
         - dd.mm.yyyy
-        - yyyy.mm.dd
-        - mm.dd.yyyy
+        - dd/mm/yyyy
+        - m/d/yyyy
+        - yyyy-mm-dd
     ClockDisplayFormat:
       type:
         - string
