@@ -1000,6 +1000,29 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Settings'
+  /{tenant}/api/v0/users:
+    get:
+      description: Returns list of users in tenant. Will be a simplified version of the user object with only the current tenant in access list (for performance reasons).
+      tags:
+        - Users API
+      parameters:
+        - $ref: '#/components/parameters/TenantAlias'
+      responses:
+        '200':
+          description: Successfully retrieved users from the server
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
   /{tenant}/api/v0/users/{user}:
     get:
       description: Returns a single user based on its ID
@@ -3173,8 +3196,12 @@ components:
           $ref: '#/components/schemas/UUID'
         name:
           type: string
+          examples:
+            - Klatrepark Bergen
         currentAlias:
           type: string
+          examples:
+            - klatrepark-bergen
         status:
           $ref: '#/components/schemas/UserStatus'
         role:
